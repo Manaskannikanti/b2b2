@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Agents — Workwise.AI</title>
+    <meta name="description"
+        content="Explore all AI agents designed to optimize performance, growth, and enterprise alignment." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Arimo:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="agents.css" />
+</head>
+
+<body>
+
+    <!-- HEADER (identical to landing) -->
+    <header class="header">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <div class="logo-tl"></div>
+                <div class="logo-tr"></div>
+                <div class="logo-bl"></div>
+                <div class="logo-br"></div>
+            </div>
+            <span class="logo-text">entomo</span>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" aria-label="Notifications">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+            </button>
+            <button class="icon-btn" aria-label="Settings">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </button>
+            <div class="user-profile">
+                <div class="avatar">PA</div>
+                <div class="user-info">
+                    <span class="user-name">Perform Admin</span>
+                    <span class="user-role">Designation not assign...</span>
+                </div>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- SIDEBAR (identical to landing) -->
+    <nav class="sidebar">
+        <div class="sidebar-group">
+            <button class="nav-btn" aria-label="Home" onclick="location.href='index.html'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#6B7280" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <polyline points="9 22 9 12 15 12 15 22" stroke="#6B7280" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Analytics">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="20" x2="18" y2="10" stroke="#6B7280" stroke-width="2" stroke-linecap="round" />
+                    <line x1="12" y1="20" x2="12" y2="4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" />
+                    <line x1="6" y1="20" x2="6" y2="14" stroke="#6B7280" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Share">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="18" cy="5" r="2.5" stroke="#6B7280" stroke-width="1.8" />
+                    <circle cx="6" cy="12" r="2.5" stroke="#6B7280" stroke-width="1.8" />
+                    <circle cx="18" cy="19" r="2.5" stroke="#6B7280" stroke-width="1.8" />
+                    <line x1="8.4" y1="13.4" x2="15.6" y2="17.6" stroke="#6B7280" stroke-width="1.8"
+                        stroke-linecap="round" />
+                    <line x1="15.6" y1="6.4" x2="8.4" y2="10.6" stroke="#6B7280" stroke-width="1.8"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Security">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="5" y="11" width="14" height="10" rx="2" stroke="#6B7280" stroke-width="1.8" />
+                    <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Info">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#6B7280" stroke-width="1.8" />
+                    <line x1="12" y1="8" x2="12" y2="12" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" stroke="#6B7280" stroke-width="2.4"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="sidebar-group sidebar-group--bottom">
+            <button class="nav-btn" aria-label="Location">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C8.69 2 6 4.69 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z" stroke="#6B7280"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="8" r="2" stroke="#6B7280" stroke-width="1.8" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Transfer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M7 16V4m0 0L3 8m4-4l4 4" stroke="#9CA3AF" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M17 8v12m0 0l4-4m-4 4l-4-4" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn nav-btn--workwise active" aria-label="Workwise"
+                onclick="window.location.href='../workwise-b2b-hub/index.html'">
+                <img src="workwise image.png" alt="Workwise" width="30" height="30" style="display:block; object-fit:contain;" />
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <!-- Floating HR Toggle -->
+        <div class="sticky-toggle-wrap">
+            <div class="hr-flip-card" id="hrToggle" onclick="toggleHRMode()">
+                <div class="flip-inner">
+                    <!-- Front: HR Mode -->
+                    <div class="flip-front">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span>HR</span>
+                    </div>
+                    <!-- Back: All Agents -->
+                    <div class="flip-back">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <span>All</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="agents-page" id="agentsPage">
+
+            <!-- PAGE HERO -->
+            <section class="agents-page-hero">
+                <div class="aph-glow"></div>
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span class="badge-text">Workwise.AI V2.0</span>
+                </div>
+                <div class="aph-title">
+                    <h1 class="aph-title-dark">Meet Your</h1>
+                    <h1 class="aph-title-gradient">AI Workforce</h1>
+                </div>
+                <p class="aph-sub">AI agents designed to optimize performance, growth, and enterprise<br />alignment
+                    across your organization.</p>
+            </section>
+
+            <!-- ══════════════════════════════════════
+                 MY AGENTS (DYNAMIC SECTION)
+                 ══════════════════════════════════════ -->
+            <div id="my-agents-group" class="agent-group" style="display:none; margin-top: 20px; margin-bottom: 40px;">
+                <div class="ag-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <h2 class="ag-title">My Custom Agents</h2>
+                        <span class="acard-tag blue" style="font-size:10px; padding:2px 8px; background: rgba(91,19,236,0.1); color: #5B13EC;">USER CREATED</span>
+                    </div>
+                    <div class="ag-underline" style="background: linear-gradient(90deg, #5B13EC, transparent); height: 3px; border-radius: 2px;"></div>
+                </div>
+                <div class="acard-row" id="my-agents-list" style="display: flex; flex-wrap: wrap; gap: 24px;">
+                    <!-- Custom agents injected here -->
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════
+                 HR FOCUSED VIEW (SINGLE SECTION)
+                 ══════════════════════════════════════ -->
+            <div id="hr-focused-section" class="agent-group" style="display:none; margin-top: 20px;">
+                <div class="ag-header">
+                    <h2 class="ag-title">HR Specialist Suite</h2>
+                    <div class="ag-underline"></div>
+                </div>
+                <div class="acard-row" style="display: flex; flex-wrap: wrap; gap: 24px;">
+                    <!-- TalentAtlas -->
+                    <article class="acard" data-category="hr" onclick="openExploreModal()" style="cursor:pointer;" tabindex="0">
+                        <div class="acard-avatar-wrap">
+                            <img src="talent atlas.png" alt="TalentAtlas" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">TalentAtlas</h3>
+                            <span class="acard-tag blue">ROLE INTELLIGENCE</span>
+                            <p class="acard-desc">Design industry-benchmarked role architectures and competency frameworks.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Market Benchmarks &amp; Role Mapping</li>
+                                <li><span class="adot blue"></span>Competency Mapping</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <!-- RoleArchitect -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="role architect.png" alt="RoleArchitect" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">RoleArchitect</h3>
+                            <span class="acard-tag blue">ROLE ARCHITECTURE</span>
+                            <p class="acard-desc">Design structured role architectures that define success profiles and benchmarks.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Success profile structuring</li>
+                                <li><span class="adot blue"></span>Responsibility framework</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <!-- Pulse360 -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="pulse 360.png" alt="Pulse360" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">Pulse360</h3>
+                            <span class="acard-tag blue">SENTIMENT ANALYTICS</span>
+                            <p class="acard-desc">Analyze feedback tone, alignment, and perception gaps to uncover risks.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Tone Analysis</li>
+                                <li><span class="adot blue"></span>Alignment Signals</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <!-- ConvoCraft -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="agent-convocraft.png" alt="ConvoCraft" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">ConvoCraft</h3>
+                            <span class="acard-tag blue">CONVERSATION DESIGN</span>
+                            <p class="acard-desc">Structure high-impact HR and manager conversations with clarity.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Performance Talks</li>
+                                <li><span class="adot blue"></span>360 Feedback Insights</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <!-- GrowthPlanner -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="growth planner.png" alt="GrowthPlanner" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">GrowthPlanner</h3>
+                            <span class="acard-tag blue">DEVELOPMENT ENGINE</span>
+                            <p class="acard-desc">Translate performance insights into personalized capability plans.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Skill Gap Identification</li>
+                                <li><span class="adot blue"></span>Career Path Design</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════
+                 GROUP 1: Role & Skills  (5 cards → slider)
+                 ══════════════════════════════════════ -->
+            <div class="agent-group agent-group--slider">
+                <div class="ag-header">
+                    <h2 class="ag-title">Role &amp; Skills</h2>
+                    <div class="ag-underline"></div>
+                </div>
+                <div class="acard-slider-wrap">
+                    <div class="acard-slider">
+                        <!-- TalentAtlas -->
+                        <article class="acard" data-category="hr" onclick="openExploreModal()" style="cursor:pointer;" tabindex="0">
+                            <div class="acard-avatar-wrap">
+                                <img src="talent atlas.png" alt="TalentAtlas" class="acard-avatar" />
+                            </div>
+                            <div class="acard-body">
+                                <h3 class="acard-name">TalentAtlas</h3>
+                                <span class="acard-tag blue">ROLE INTELLIGENCE</span>
+                                <p class="acard-desc">Design industry-benchmarked role architectures and competency
+                                    frameworks.</p>
+                                <ul class="acard-list">
+                                    <li><span class="adot blue"></span>Market Benchmarks &amp; Role Mapping</li>
+                                    <li><span class="adot blue"></span>Competency Mapping</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <!-- RoleArchitect -->
+                        <article class="acard" data-category="hr">
+                            <div class="acard-avatar-wrap">
+                                <img src="role architect.png" alt="RoleArchitect" class="acard-avatar" />
+                            </div>
+                            <div class="acard-body">
+                                <h3 class="acard-name">RoleArchitect</h3>
+                                <span class="acard-tag blue">ROLE ARCHITECTURE</span>
+                                <p class="acard-desc">Design structured role architectures that define success profiles,
+                                    scope, and industry benchmarks.</p>
+                                <ul class="acard-list">
+                                    <li><span class="adot blue"></span>Success profile structuring</li>
+                                    <li><span class="adot blue"></span>Responsibility framework design</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <!-- SkillMatrix -->
+                        <article class="acard" data-category="hr">
+                            <div class="acard-avatar-wrap">
+                                <img src="skill craft.png" alt="SkillMatrix" class="acard-avatar" />
+                            </div>
+                            <div class="acard-body">
+                                <h3 class="acard-name">SkillMatrix</h3>
+                                <span class="acard-tag blue">PROFICIENCY INTELLIGENCE</span>
+                                <p class="acard-desc">Design skill frameworks that map proficiency levels, capability
+                                    gaps,
+                                    and market alignment.</p>
+                                <ul class="acard-list">
+                                    <li><span class="adot blue"></span>Competency mapping engine</li>
+                                    <li><span class="adot blue"></span>Proficiency gap visibility</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <!-- Flowgen -->
+                        <article class="acard">
+                            <div class="acard-avatar-wrap">
+                                <img src="flowgen.png" alt="Flowgen" class="acard-avatar" />
+                            </div>
+                            <div class="acard-body">
+                                <h3 class="acard-name">Flowgen</h3>
+                                <span class="acard-tag blue">STRUCTURE AI</span>
+                                <p class="acard-desc">Design industry-benchmarked role architectures and competency
+                                    frameworks.</p>
+                                <ul class="acard-list">
+                                    <li><span class="adot blue"></span>Market Benchmarks &amp; Role Mapping</li>
+                                    <li><span class="adot blue"></span>Competency Mapping</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <!-- ProfileCraft -->
+                        <article class="acard">
+                            <div class="acard-avatar-wrap">
+                                <img src="profile craft.png" alt="ProfileCraft" class="acard-avatar" />
+                            </div>
+                            <div class="acard-body">
+                                <h3 class="acard-name">ProfileCraft</h3>
+                                <span class="acard-tag blue">ROLE OPTIMIZER</span>
+                                <p class="acard-desc">Design role-aligned professional profiles that reflect impact,
+                                    skills,
+                                    and enterprise readiness.</p>
+                                <ul class="acard-list">
+                                    <li><span class="adot blue"></span>Smart Profile Builder</li>
+                                    <li><span class="adot blue"></span>Impact &amp; Skills Optimization</li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div><!-- /acard-slider -->
+                </div><!-- /acard-slider-wrap -->
+            </div><!-- /agent-group -->
+
+            <!-- ══════════════════════════════════════
+                 GROUP 2: Performance & Feedback  (4 cards → slider)
+                 ══════════════════════════════════════ -->
+            <div class="agent-group">
+                <div class="ag-header">
+                    <h2 class="ag-title">Performance &amp; Feedback</h2>
+                    <div class="ag-underline"></div>
+                </div>
+                <div class="acard-row">
+                    <!-- Pulse360 -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="pulse 360.png" alt="Pulse360" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">Pulse360</h3>
+                            <span class="acard-tag blue">SENTIMENT ANALYTICS</span>
+                            <p class="acard-desc">Analyze feedback tone, alignment, and perception gaps to uncover blind
+                                spots and leadership risks.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Tone Analysis</li>
+                                <li><span class="adot blue"></span>Alignment Signals</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Insight360 -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="Insight360.png" alt="Insight360" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">Insight360</h3>
+                            <span class="acard-tag blue">FEEDBACK INTELLIGENCE</span>
+                            <p class="acard-desc">Design feedback intelligence summaries that surface perception gaps,
+                                strengths, and growth priorities.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>360 feedback gap detection</li>
+                                <li><span class="adot blue"></span>Perception alignment insights</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- TeamInsight -->
+                    <article class="acard">
+                        <div class="acard-avatar-wrap">
+                            <img src="TeamInsight.png" alt="TeamInsight" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">TeamInsight</h3>
+                            <span class="acard-tag blue">MANAGER INTELLIGENCE</span>
+                            <p class="acard-desc">Design team-level performance insights that highlight alignment,
+                                risks, and leadership focus areas.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Team performance diagnostics</li>
+                                <li><span class="adot blue"></span>Manager decision support</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- GoalForge -->
+                    <article class="acard">
+                        <div class="acard-avatar-wrap">
+                            <img src="Goalforge.png" alt="GoalForge" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">GoalForge</h3>
+                            <span class="acard-tag blue">GOAL INTELLIGENCE</span>
+                            <p class="acard-desc">Design role-aligned performance goals that reflect impact, clarity and
+                                strategic alignment.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Smart goal generation</li>
+                                <li><span class="adot blue"></span>Goal quality validation</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div><!-- /acard-row -->
+            </div><!-- /agent-group -->
+
+
+            <!-- ══════════════════════════════════════
+                 GROUP 3: Growth & Development  (1 card → grid)
+                 ══════════════════════════════════════ -->
+            <div class="agent-group">
+                <div class="ag-header">
+                    <h2 class="ag-title">Growth &amp; Development</h2>
+                    <div class="ag-underline"></div>
+                </div>
+                <div class="acard-row">
+                    <!-- GrowthPlanner -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="growth planner.png" alt="GrowthPlanner" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">GrowthPlanner</h3>
+                            <span class="acard-tag blue">DEVELOPMENT ENGINE</span>
+                            <p class="acard-desc">Translate performance insights into personalized growth and
+                                capability
+                                plans.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Skill Gap Identification</li>
+                                <li><span class="adot blue"></span>Career Path &amp; Progression Design</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div><!-- /acard-row -->
+            </div><!-- /agent-group -->
+
+            <!-- ══════════════════════════════════════
+                 GROUP 4: Assessments & Conversations  (2 cards → grid)
+                 ══════════════════════════════════════ -->
+            <div class="agent-group">
+                <div class="ag-header">
+                    <h2 class="ag-title">Assessments &amp; Conversations</h2>
+                    <div class="ag-underline"></div>
+                </div>
+                <div class="acard-row">
+                    <!-- AssesCraft -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="assescraft.png" alt="AssesCraft" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">AssesCraft</h3>
+                            <span class="acard-tag blue">ASSESMENT ENGINE</span>
+                            <p class="acard-desc">Design structured, role-aligned assessments that evaluate skills,
+                                proficiency, and job readiness.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Skill-based assessment design</li>
+                                <li><span class="adot blue"></span>Role-specific evaluation sets</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- ConvoCraft -->
+                    <article class="acard" data-category="hr">
+                        <div class="acard-avatar-wrap">
+                            <img src="agent-convocraft.png" alt="ConvoCraft" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">ConvoCraft</h3>
+                            <span class="acard-tag blue">CONVERSATION DESIGN</span>
+                            <p class="acard-desc">Structure high-impact HR and manager conversations with clarity
+                                and
+                                intent.</p>
+                            <ul class="acard-list">
+                                <li><span class="adot blue"></span>Performance Talks</li>
+                                <li><span class="adot blue"></span>360 Feedback Insights</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div><!-- /acard-row -->
+            </div><!-- /agent-group -->
+
+        </div><!-- /agents-page -->
+
+    </main>
+
+    <!-- ═══════════ EXPLORE MODAL ═══════════ -->
+    <style>
+        .explore-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .42);
+            backdrop-filter: blur(3px);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .explore-overlay.hidden {
+            display: none;
+        }
+
+        .explore-modal {
+            width: 520px;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, .22);
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .em-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 36px 32px 24px;
+            background: linear-gradient(160deg, #F8FAFF 0%, #FFFFFF 100%);
+            border-bottom: 1px solid #F1F5F9;
+            gap: 8px;
+        }
+
+        .em-avatar {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            object-position: center bottom;
+            filter: drop-shadow(0 8px 18px rgba(91, 19, 236, .14));
+        }
+
+        .em-name {
+            font-weight: 700;
+            font-size: 20px;
+            color: #0F172B;
+        }
+
+        .em-badge {
+            padding: 3px 14px;
+            background: rgba(91, 19, 236, .09);
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            color: #5B13EC;
+        }
+
+        .em-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 24px 28px;
+        }
+
+        .em-option {
+            background: #F8FAFC;
+            border: 1.5px solid #E8EDF5;
+            border-radius: 16px;
+            padding: 20px 18px;
+            cursor: pointer;
+            transition: box-shadow .18s, border-color .18s, transform .18s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .em-option:hover {
+            border-color: #a78bfa;
+            box-shadow: 0 6px 20px rgba(91, 19, 236, .12);
+            transform: translateY(-2px);
+            background: #fff;
+        }
+
+        .em-option-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+
+        .em-option-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .em-option-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0F172B;
+        }
+
+        .em-option-desc {
+            font-size: 12px;
+            line-height: 1.55;
+            color: #62748E;
+        }
+
+        .em-footer {
+            text-align: center;
+            padding: 0 28px 24px;
+        }
+
+        .em-cancel {
+            font-size: 13px;
+            color: #90A1B9;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background .15s;
+        }
+
+        .em-cancel:hover {
+            background: #F1F5F9;
+            color: #62748E;
+        }
+    </style>
+
+    <div class="explore-overlay hidden" id="explore-overlay" onclick="handleOverlayClick(event)">
+        <div class="explore-modal">
+            <div class="em-hero">
+                <img src="talent-hi.png" class="em-avatar" alt="TalentAtlas" />
+                <div class="em-name">TalentAtlas</div>
+                <span class="em-badge">Role Intelligence</span>
+            </div>
+
+            <div class="em-options">
+                <a class="em-option" href="talentatlas.html">
+                    <div class="em-option-icon" style="background:#EFF6FF;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#2B7FFF" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                        </svg>
+                    </div>
+                    <div class="em-option-title">Explore Here</div>
+                    <div class="em-option-desc">Open TalentAtlas in its full dedicated workspace with all capabilities.
+                    </div>
+                </a>
+                <a class="em-option" href="workflow.html">
+                    <div class="em-option-icon" style="background:#F3E8FF;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </div>
+                    <div class="em-option-title">Explore in My Workflow</div>
+                    <div class="em-option-desc">Launch TalentAtlas inline inside your current workflow context.</div>
+                </a>
+            </div>
+
+            <div class="em-footer">
+                <button class="em-cancel" onclick="closeExploreModal()">Maybe later</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openExploreModal() {
+            document.getElementById('explore-overlay').classList.remove('hidden');
+        }
+        function closeExploreModal() {
+            document.getElementById('explore-overlay').classList.add('hidden');
+        }
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('explore-overlay')) closeExploreModal();
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeExploreModal();
+        });
+
+        // --- MY AGENTS RENDERING LOGIC ---
+        function renderCustomAgents() {
+            const myAgents = JSON.parse(localStorage.getItem('myAgents') || '[]');
+            const pinnedAgentName = localStorage.getItem('pinnedAgentName');
+            const container = document.getElementById('my-agents-group');
+            const list = document.getElementById('my-agents-list');
+            
+            // Always show the container now that we have a promo card
+            container.style.display = 'block';
+            list.innerHTML = '';
+
+            // Prepend the Promo Card
+            const promoCard = document.createElement('article');
+            promoCard.className = 'acard acard--promo';
+            promoCard.onclick = () => window.location.href = 'chat.html';
+            promoCard.innerHTML = `
+                <div class="avatar-stack">
+                    <img src="pulse 360.png" class="stack-img" alt="Agent 1" />
+                    <img src="agent-convocraft.png" class="stack-img" alt="Agent 2" />
+                    <img src="growth planner.png" class="stack-img" alt="Agent 3" />
+                </div>
+                <div class="acard-body" style="padding-top: 0;">
+                    <span class="promo-tag">Custom Agent Fusion</span>
+                    <h3 class="acard-name">Start Your Fusion</h3>
+                    <p class="acard-desc" style="max-width: 200px;">Merge specialized intelligence into a bespoke powerhouse tailored to your workflow.</p>
+                    <button class="promo-btn" onclick="event.stopPropagation(); window.location.href='chat.html'">Launch Fusion</button>
+                </div>
+            `;
+            list.appendChild(promoCard);
+            
+            myAgents.forEach((agent, index) => {
+                const isPinned = pinnedAgentName === agent.name;
+                const card = document.createElement('article');
+                card.className = 'acard';
+                
+                const capabilitiesHtml = agent.capabilities.map(cap => `
+                    <li><span class="adot blue"></span>${cap}</li>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="acard-controls">
+                        <button class="acard-btn acard-btn--pin ${isPinned ? 'active' : ''}" 
+                                onclick="togglePinAgent(event, ${index})" 
+                                title="${isPinned ? 'Unpin from Home' : 'Pin to Home Carousel'}">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="${isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </button>
+                        <button class="acard-btn acard-btn--del" 
+                                onclick="deleteCustomAgent(event, ${index})" 
+                                title="Delete Agent">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div onclick="window.location.href='chat.html'" style="display:flex; flex-direction:column; align-items:center; width:100%; cursor:pointer;">
+                        <div class="acard-avatar-wrap">
+                            <img src="${agent.avatar}" alt="${agent.name}" class="acard-avatar" />
+                        </div>
+                        <div class="acard-body">
+                            <h3 class="acard-name">${agent.name}</h3>
+                            <span class="acard-tag blue" style="background: rgba(91,19,236,0.1); color: #5B13EC;">${agent.role.toUpperCase()}</span>
+                            <p class="acard-desc">Fused intelligence profile based on session orchestration.</p>
+                            <ul class="acard-list">
+                                ${capabilitiesHtml}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function togglePinAgent(event, index) {
+            event.stopPropagation();
+            const myAgents = JSON.parse(localStorage.getItem('myAgents') || '[]');
+            const agent = myAgents[index];
+            const currentPinned = localStorage.getItem('pinnedAgentName');
+            
+            if (currentPinned === agent.name) {
+                localStorage.removeItem('pinnedAgentName');
+                localStorage.removeItem('pinnedAgentData');
+            } else {
+                localStorage.setItem('pinnedAgentName', agent.name);
+                localStorage.setItem('pinnedAgentData', JSON.stringify(agent));
+            }
+            
+            renderCustomAgents();
+        }
+
+        function deleteCustomAgent(event, index) {
+            event.stopPropagation();
+            let myAgents = JSON.parse(localStorage.getItem('myAgents') || '[]');
+            const agent = myAgents[index];
+            
+            // If deleting a pinned agent, clean up pin storage
+            if (localStorage.getItem('pinnedAgentName') === agent.name) {
+                localStorage.removeItem('pinnedAgentName');
+                localStorage.removeItem('pinnedAgentData');
+            }
+
+            myAgents.splice(index, 1);
+            localStorage.setItem('myAgents', JSON.stringify(myAgents));
+            renderCustomAgents();
+            
+            if (myAgents.length === 0) {
+                document.getElementById('my-agents-group').style.display = 'none';
+            }
+        }
+        
+        // Run on load
+        document.addEventListener('DOMContentLoaded', renderCustomAgents);
+
+        // ── Slider arrow navigation ──
+        function slideCards(btn, dir) {
+            const slider = btn.closest('.acard-slider-wrap').querySelector('.acard-slider');
+            const cardWidth = slider.querySelector('.acard').offsetWidth + 24; // card + gap
+            slider.scrollBy({ left: dir * cardWidth * 2, behavior: 'smooth' });
+        }
+    </script>
+
+    <script>
+        // ── HR MODE TOGGLE ──
+        let isHRMode = false;
+        function toggleHRMode() {
+            isHRMode = !isHRMode;
+            const btn = document.getElementById('hrToggle');
+            const page = document.getElementById('agentsPage');
+            const focusSection = document.getElementById('hr-focused-section');
+            
+            // Toggle the 3D flip animation
+            btn.classList.toggle('flipped', isHRMode);
+            
+            // Toggle the global filtering class
+            page.classList.toggle('filtering-hr', isHRMode);
+            
+            // Switch Views
+            const groups = document.querySelectorAll('.agent-group');
+            groups.forEach(group => {
+                if (group === focusSection) {
+                    group.style.display = isHRMode ? 'block' : 'none';
+                    return;
+                }
+
+                if (isHRMode) {
+                    group.style.display = 'none';
+                } else {
+                    // Restore logic for custom agents
+                    if (group.id === 'my-agents-group') {
+                        const list = document.getElementById('my-agents-list');
+                        group.style.display = (list && list.children.length > 0) ? '' : 'none';
+                    } else {
+                        group.style.display = '';
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

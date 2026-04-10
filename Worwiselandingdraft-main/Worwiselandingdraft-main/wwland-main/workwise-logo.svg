@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" width="120" height="100">
+  <!-- W path: blue(10,52) → red(28,76) → green(52,18) → orange(70,72) → gold(108,36) -->
+  <polyline
+    points="10,52 28,76 52,18 70,72 108,36"
+    stroke="#1A1A1A"
+    stroke-width="5.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <!-- Blue dot — leftmost, small -->
+  <circle cx="10"  cy="52" r="8"  fill="#4285F4"/>
+  <!-- Red dot — lower-left valley, tiny -->
+  <circle cx="28"  cy="76" r="6"  fill="#EA4335"/>
+  <!-- Green dot — left peak, medium-large -->
+  <circle cx="52"  cy="18" r="13" fill="#34A853"/>
+  <!-- Orange dot — center trough, medium -->
+  <circle cx="70"  cy="72" r="10" fill="#FBBC04"/>
+  <!-- Gold dot — right peak, largest -->
+  <circle cx="108" cy="36" r="16" fill="#F9AB00"/>
+</svg>

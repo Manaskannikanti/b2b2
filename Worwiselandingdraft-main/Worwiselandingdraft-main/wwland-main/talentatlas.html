@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TalentAtlas — Agent Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --sidebar-w: 60px;
+            --header-h: 70px;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+        /* ════════════════════════════
+       HEADER
+    ════════════════════════════ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            background: #FFFFFF;
+            border-bottom: 0.667px solid #E5E7EB;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 200;
+        }
+
+        /* Entomo Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        /* 4-quadrant logo mark */
+        .logo-q {
+            position: absolute;
+        }
+
+        .logo-q.tl {
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border: 4px solid #F0B100;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 8px 0 0 0;
+        }
+
+        .logo-q.tr {
+            top: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            background: #0072CE;
+            border-radius: 0 8px 0 6px;
+        }
+
+        .logo-q.bl {
+            bottom: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border: 4px solid #FB2C36;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 8px;
+        }
+
+        .logo-q.br {
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border: 4px solid #00A63E;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 8px 0;
+        }
+
+        .logo-name {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 32px;
+            letter-spacing: -0.6px;
+            color: #1D2939;
+        }
+
+        /* Right header cluster */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hdr-icon-btn {
+            width: 40px;
+            height: 40px;
+            background: #F3F4F6;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .15s;
+        }
+
+        .hdr-icon-btn:hover {
+            background: #E5E7EB;
+        }
+
+        .hdr-icon-btn svg {
+            width: 20px;
+            height: 20px;
+            color: #374151;
+        }
+
+        .profile-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px 4px 4px;
+            border-radius: 10px;
+            transition: background .15s;
+            cursor: pointer;
+        }
+
+        .profile-cluster:hover {
+            background: #F3F4F6;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            background: #E2E8F0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arimo', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #364153;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .profile-name {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 20px;
+            color: #101828;
+            white-space: nowrap;
+        }
+
+        .profile-role {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            color: #6B7280;
+            white-space: nowrap;
+        }
+
+        .profile-chevron {
+            width: 16px;
+            height: 16px;
+            color: #6B7280;
+        }
+
+        /* ════════════════════════════
+       SIDEBAR
+    ════════════════════════════ */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-h);
+            width: var(--sidebar-w);
+            bottom: 0;
+            background: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0 16px;
+            z-index: 100;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .sidebar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: background .15s;
+            color: #111827;
+        }
+
+        .sidebar-btn:hover {
+            background: #F3F4F6;
+        }
+
+        .sidebar-btn.active {
+            background: #DBEAFE;
+            color: #3B82F6;
+        }
+
+        .sidebar-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Tooltip on hover */
+        .sidebar-btn::after {
+            content: attr(data-tip);
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1F2937;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .15s;
+            z-index: 999;
+        }
+
+        .sidebar-btn:hover::after {
+            opacity: 1;
+        }
+
+        .sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 16px;
+        }
+
+        /* ════════════════════════════
+       MAIN CONTENT
+    ════════════════════════════ */
+        .main {
+            margin-left: var(--sidebar-w);
+            margin-top: var(--header-h);
+            height: calc(100vh - var(--header-h));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px 40px;
+            overflow-y: auto;
+        }
+
+        .content-area {
+            width: 900px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* ── Avatar & name ── */
+        .agent-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .agent-avatar-wrap {
+            width: 140px;
+            height: 160px;
+            position: relative;
+        }
+
+        .agent-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center top;
+            filter: drop-shadow(0 12px 20px rgba(91, 19, 236, .13));
+            transition: transform .3s ease, filter .3s ease;
+        }
+
+        .agent-avatar-wrap:hover img {
+            transform: translateY(-6px);
+            filter: drop-shadow(0 20px 28px rgba(91, 19, 236, .2));
+        }
+
+        .agent-name {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 28px;
+            color: #0F172B;
+            text-align: center;
+        }
+
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 12px;
+            background: rgba(91, 19, 236, .10);
+            border-radius: 999px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            color: #5B13EC;
+        }
+
+        /* ── Card housing chat input + chips ── */
+        .chat-card {
+            position: relative;
+            width: 900px;
+            max-width: 100%;
+            background: rgba(255, 255, 255, .80);
+            border: 0.667px solid rgba(255, 255, 255, .5);
+            border-radius: 28px;
+            margin-top: 28px;
+            padding: 0 0 28px;
+            overflow: visible;
+        }
+
+        /* Heading group — floats above the card */
+        .heading-group {
+            text-align: center;
+            padding: 36px 40px 24px;
+        }
+
+        .heading-main {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 36px;
+            line-height: 40px;
+            letter-spacing: -0.9px;
+            color: #0F172B;
+            margin-bottom: 14px;
+        }
+
+        .heading-sub {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 26px;
+            color: #62748E;
+            max-width: 501px;
+            margin: 0 auto;
+        }
+
+        /* Glass input box */
+        .input-box {
+            position: relative;
+            width: 768px;
+            max-width: calc(100% - 80px);
+            margin: 0 auto 22px;
+            background: rgba(255, 255, 255, .85);
+            border: 0.667px solid rgba(255, 255, 255, .6);
+            box-shadow:
+                0 20px 40px -10px rgba(0, 0, 0, .08),
+                0 10px 10px -5px rgba(0, 0, 0, .04),
+                inset 0 1px 16px rgba(0, 0, 0, .08);
+            border-radius: 28px;
+            padding: 10px 10px 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: box-shadow .2s;
+        }
+
+        .input-box:focus-within {
+            box-shadow:
+                0 20px 50px -10px rgba(91, 19, 236, .12),
+                0 10px 16px -5px rgba(0, 0, 0, .06),
+                inset 0 1px 16px rgba(0, 0, 0, .06);
+        }
+
+        .input-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .input-field {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-weight: 510;
+            font-size: 20px;
+            line-height: 32px;
+            color: #0F172B;
+            margin-bottom: 6px;
+        }
+
+        .input-field::placeholder {
+            color: #90A1B9;
+        }
+
+        .input-tools {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .input-tool-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #155DFC;
+            padding: 0;
+            transition: opacity .15s, transform .15s;
+        }
+
+        .input-tool-btn:hover {
+            opacity: .75;
+            transform: scale(1.1);
+        }
+
+        .input-tool-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Send button — tall rounded rectangle on the right */
+        .send-btn {
+            width: 64px;
+            align-self: stretch;
+            min-height: 100px;
+            background: #5B13EC;
+            box-shadow: 0 8px 20px -4px rgba(91, 19, 236, .32);
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: opacity .15s, transform .15s, box-shadow .15s;
+        }
+
+        .send-btn:hover {
+            opacity: .9;
+            transform: scale(1.03);
+            box-shadow: 0 14px 20px -4px rgba(91, 19, 236, .3);
+        }
+
+        .send-btn svg {
+            width: 28px;
+            height: 28px;
+            color: #fff;
+        }
+
+        /* ── Prompt chips ── */
+        .chip-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 0 40px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            background: #F8FAFC;
+            border: 0.667px solid rgba(226, 232, 240, .6);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .10), 0 1px 2px -1px rgba(0, 0, 0, .10);
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #45556C;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .15s, box-shadow .15s, transform .15s, border-color .15s;
+        }
+
+        .chip:hover {
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .10);
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        .chip-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ════════════════════════════
+       CAPABILITIES SECTION
+    ════════════════════════════ */
+        .capabilities {
+            width: 900px;
+            max-width: 100%;
+            margin-top: 24px;
+        }
+
+        .cap-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .cap-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #E2E8F0 50%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .cap-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 16px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #90A1B9;
+            white-space: nowrap;
+        }
+
+        .cap-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .cap-card {
+            position: relative;
+            background: #FFFFFF;
+            border: 0.667px solid rgba(226, 232, 240, .8);
+            border-radius: 20px;
+            overflow: hidden;
+            padding: 20px 21px 20px;
+            cursor: pointer;
+            transition: box-shadow .22s ease, transform .22s ease, border-color .22s ease;
+        }
+
+        .cap-card:hover {
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .10);
+            transform: translateY(-3px);
+            border-color: rgba(203, 213, 225, .9);
+        }
+
+        /* Top colour bar */
+        .cap-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        /* Icon circle */
+        .cap-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            transition: transform .22s ease;
+        }
+
+        .cap-card:hover .cap-icon {
+            transform: scale(1.10);
+        }
+
+        .cap-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .cap-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #1D293D;
+            margin-bottom: 6px;
+        }
+
+        .cap-desc {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 20px;
+            color: #62748E;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ════════════ HEADER ════════════ -->
+    <header class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <div class="logo-q tl"></div>
+                <div class="logo-q tr"></div>
+                <div class="logo-q bl"></div>
+                <div class="logo-q br"></div>
+            </div>
+            <span class="logo-name">entomo</span>
+        </a>
+
+        <div class="header-right">
+            <!-- Bell -->
+            <button class="hdr-icon-btn" title="Notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+            </button>
+            <!-- Settings -->
+            <button class="hdr-icon-btn" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </button>
+            <!-- Profile -->
+            <div class="profile-cluster">
+                <div class="profile-avatar">PA</div>
+                <div class="profile-info">
+                    <span class="profile-name">Perform Admin</span>
+                    <span class="profile-role">Designation not assigned</span>
+                </div>
+                <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- ════════════ SIDEBAR ════════════ -->
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <!-- Home -->
+            <button class="sidebar-btn" data-tip="Home" onclick="location.href='index.html'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+            </button>
+            <!-- Analytics -->
+            <button class="sidebar-btn" data-tip="Analytics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                    <path d="M2 20h20" />
+                </svg>
+            </button>
+            <!-- Share / Org -->
+            <button class="sidebar-btn" data-tip="Organisation">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+            </button>
+            <!-- Lock / Security -->
+            <button class="sidebar-btn" data-tip="Security">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+            </button>
+            <!-- Info -->
+            <button class="sidebar-btn" data-tip="Info">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <!-- Location -->
+            <button class="sidebar-btn" data-tip="Location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#99A1AF" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 2C8.69 2 6 4.69 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z" />
+                    <circle cx="12" cy="8" r="2" />
+                </svg>
+            </button>
+            <!-- Transfer -->
+            <button class="sidebar-btn" data-tip="Transfer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#99A1AF" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M7 16V4m0 0L3 8m4-4l4 4" />
+                    <path d="M17 8v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+            </button>
+            <!-- Workwise logo mark — always active -->
+            <button class="sidebar-btn active" data-tip="Workwise.AI" style="background:rgba(91,19,236,0.18);">
+                <img src="workwise image.png" alt="Workwise" width="26" height="26" style="display:block; object-fit:contain;" />
+            </button>
+        </div>
+    </aside>
+
+    <!-- ════════════ MAIN ════════════ -->
+    <main class="main">
+        <div class="content-area">
+
+            <!-- Avatar & name -->
+            <div class="agent-hero">
+                <div class="agent-avatar-wrap">
+                    <img src="talent-hi.png" alt="TalentAtlas" />
+                </div>
+                <div class="agent-name">TalentAtlas</div>
+                <span class="role-pill">Role Intelligence</span>
+            </div>
+
+            <!-- Chat card -->
+            <div class="chat-card">
+                <div class="heading-group">
+                    <div class="heading-main">How can I help your team today?</div>
+                    <div class="heading-sub">I can analyze performance reviews, detect retention risks, or help you
+                        draft precise role descriptions.</div>
+                </div>
+
+                <!-- Glass input -->
+                <div class="input-box">
+                    <div class="input-left">
+                        <input type="text" class="input-field" placeholder="Ask Workwise.AI" id="main-input" />
+                        <div class="input-tools">
+                            <button class="input-tool-btn" title="Attach file">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </button>
+                            <button class="input-tool-btn" title="Voice input">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                    <line x1="12" y1="19" x2="12" y2="23" />
+                                    <line x1="8" y1="23" x2="16" y2="23" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" onclick="handleSend()" title="Send">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Prompt chips -->
+                <div class="chip-row">
+                    <div class="chip" onclick="useChip('Analyze High Performers')">
+                        <span class="chip-dot" style="background:#FFB900;"></span>
+                        Analyze High Performers
+                    </div>
+                    <div class="chip" onclick="useChip('Detect Retention Risk')">
+                        <span class="chip-dot" style="background:#FF637E;"></span>
+                        Detect Retention Risk
+                    </div>
+                    <div class="chip" onclick="useChip('Draft Offer Letter')">
+                        <span class="chip-dot" style="background:#00D492;"></span>
+                        Draft Offer Letter
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capabilities -->
+            <div class="capabilities">
+                <div class="cap-header">
+                    <div class="cap-line"></div>
+                    <span class="cap-label">Capabilities</span>
+                    <div class="cap-line"></div>
+                </div>
+                <div class="cap-grid">
+
+                    <!-- Predictive Analytics -->
+                    <div class="cap-card">
+                        <div class="cap-bar" style="background:linear-gradient(90deg,#2B7FFF 0%,#615FFF 100%);"></div>
+                        <div class="cap-icon" style="background:#EFF6FF;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2B7FFF" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10" />
+                                <line x1="12" y1="20" x2="12" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="14" />
+                                <path d="M2 20h20" />
+                            </svg>
+                        </div>
+                        <div class="cap-title">Predictive Analytics</div>
+                        <div class="cap-desc">Forecast hiring needs based on historical team growth.</div>
+                    </div>
+
+                    <!-- Sentiment Scan -->
+                    <div class="cap-card">
+                        <div class="cap-bar" style="background:linear-gradient(90deg,#FF2056 0%,#F6339A 100%);"></div>
+                        <div class="cap-icon" style="background:#FFF1F2;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF2056" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg>
+                        </div>
+                        <div class="cap-title">Sentiment Scan</div>
+                        <div class="cap-desc">Real-time pulse on team morale and engagement levels.</div>
+                    </div>
+
+                    <!-- Market Comparison -->
+                    <div class="cap-card">
+                        <div class="cap-bar" style="background:linear-gradient(90deg,#00BC7D 0%,#00BBA7 100%);"></div>
+                        <div class="cap-icon" style="background:#ECFDF5;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#00BC7D" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="1" x2="12" y2="23" />
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </svg>
+                        </div>
+                        <div class="cap-title">Market Comparison</div>
+                        <div class="cap-desc">Salary benchmarking across 40+ global tech markets.</div>
+                    </div>
+
+                    <!-- Bias Detection -->
+                    <div class="cap-card">
+                        <div class="cap-bar" style="background:linear-gradient(90deg,#FE9A00 0%,#FF6900 100%);"></div>
+                        <div class="cap-icon" style="background:#FFFBEB;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF6900" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <div class="cap-title">Bias Detection</div>
+                        <div class="cap-desc">Scan JDs and comms for unconscious bias patterns.</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function useChip(label) {
+            document.getElementById('main-input').value = label;
+            document.getElementById('main-input').focus();
+        }
+
+        function handleSend() {
+            const val = document.getElementById('main-input').value.trim();
+            if (!val) return;
+            // Navigate to workflow.html as the "response" page
+            window.location.href = 'workflow.html';
+        }
+
+        // Enter key also submits
+        document.getElementById('main-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+
+</html>

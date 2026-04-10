@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TalentAtlas Workflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #F3F4F6;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Background screenshot ── */
+        .workflow-screen {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ── Small circular avatar bottom-right ── */
+        .agent-bubble {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 50;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(91, 19, 236, .22), 0 0 0 2.5px rgba(91, 19, 236, .14);
+        }
+
+        .agent-bubble img {
+            width: 150%;
+            height: 150%;
+            object-fit: cover;
+            object-position: center 10%;
+            display: block;
+            margin-left: -25%;
+            margin-top: -5%;
+        }
+
+        /* ════════════ OVERLAY ════════════ */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .42);
+            backdrop-filter: blur(3px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        /* ════════════ MODAL ════════════ */
+        .modal {
+            width: 660px;
+            /* 88vh total, header is ~68px, so body fills remainder */
+            height: 88vh;
+            max-height: 720px;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, .22);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Shared header ── */
+        .modal-header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px 13px;
+            border-bottom: 1px solid #F1F5F9;
+            gap: 12px;
+        }
+
+        .mh-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .header-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 10%;
+            background: #f3f4f6;
+            flex-shrink: 0;
+        }
+
+        .header-info {
+            min-width: 0;
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .header-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #0F172B;
+            white-space: nowrap;
+        }
+
+        .header-badge {
+            padding: 2px 9px;
+            background: rgba(140, 43, 238, .10);
+            border: 1px solid rgba(140, 43, 238, .2);
+            border-radius: 999px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .55px;
+            text-transform: uppercase;
+            color: #8C2BEE;
+            white-space: nowrap;
+        }
+
+        .header-sub {
+            font-size: 11px;
+            color: #90A1B9;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mh-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .workwise-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            color: #90A1B9;
+            white-space: nowrap;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #90A1B9;
+            transition: background .15s;
+        }
+
+        .icon-btn:hover {
+            background: #F1F5F9;
+        }
+
+        .icon-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ════════════════════════════════════
+       STATE 1 — LANDING
+    ════════════════════════════════════ */
+        #state-landing {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #state-landing::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #state-landing::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 4px;
+        }
+
+        .landing-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 36px 24px 20px;
+            gap: 10px;
+        }
+
+        .landing-avatar {
+            width: 96px;
+            filter: drop-shadow(0 8px 16px rgba(91, 19, 236, .12));
+        }
+
+        .landing-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: #0F172B;
+        }
+
+        .landing-badge {
+            padding: 4px 14px;
+            background: rgba(91, 19, 236, .09);
+            border-radius: 999px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .55px;
+            text-transform: uppercase;
+            color: #5B13EC;
+        }
+
+        /* ── Input bar ── */
+        .input-wrap {
+            width: 100%;
+            padding: 4px 28px 0;
+        }
+
+        .input-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #E8EDF5;
+            border-radius: 20px;
+            padding: 8px 8px 8px 20px;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .07), inset 0 1px 10px rgba(0, 0, 0, .03);
+        }
+
+        .input-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 14.5px;
+            color: #0F172B;
+        }
+
+        .input-bar input::placeholder {
+            color: #B0BBCB;
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            border: none;
+            background: #5B13EC;
+            box-shadow: 0 8px 16px rgba(91, 19, 236, .28);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: opacity .15s, transform .1s;
+        }
+
+        .send-btn:hover {
+            opacity: .9;
+            transform: scale(1.03);
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+        }
+
+        /* ── Prompt chips ── */
+        .prompt-chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px 28px 6px;
+            width: 100%;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E8EDF5;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #45556C;
+            cursor: pointer;
+            transition: box-shadow .15s, border-color .15s, background .15s;
+            white-space: nowrap;
+        }
+
+        .chip:hover {
+            background: #fff;
+            border-color: #c7d3e5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+        }
+
+        .chip-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Capabilities ── */
+        .capabilities-section {
+            padding: 22px 28px 32px;
+            width: 100%;
+        }
+
+        .cap-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .cap-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #E2E8F0 50%, transparent 100%);
+        }
+
+        .cap-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #90A1B9;
+        }
+
+        .cap-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .cap-card {
+            background: #fff;
+            border: 1px solid #EEF2F8;
+            border-radius: 16px;
+            overflow: hidden;
+            padding: 16px 14px 14px;
+            position: relative;
+            transition: box-shadow .15s;
+        }
+
+        .cap-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
+        }
+
+        .cap-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .cap-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .cap-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .cap-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1D293D;
+            margin-bottom: 4px;
+        }
+
+        .cap-desc {
+            font-size: 10.5px;
+            line-height: 1.55;
+            color: #62748E;
+        }
+
+        /* ════════════════════════════════════
+       STATE 2 — OUTPUT
+       KEY FIX: min-height: 0 enables flex child to scroll
+    ════════════════════════════════════ */
+        #state-output {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            min-height: 0;
+            /* ← CRITICAL: allows flex child to scroll */
+        }
+
+        /* User message row */
+        .msg-row {
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px 24px 14px;
+        }
+
+        .user-bubble {
+            max-width: 62%;
+            background: #E8D5FF;
+            border-radius: 16px 4px 16px 16px;
+            padding: 12px 16px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            line-height: 1.62;
+            color: #151117;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #E2E8F0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #364153;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Scrollable area — min-height: 0 is what unlocks scrolling */
+        .output-scroll {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0 24px 16px;
+        }
+
+        .output-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .output-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .output-scroll::-webkit-scrollbar-thumb {
+            background: #DDE3EC;
+            border-radius: 4px;
+        }
+
+        /* JD Card */
+        .jd-card {
+            background: #fff;
+            border: 1px solid #EEF2F8;
+            border-radius: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .jd-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .jd-header-left {
+            min-width: 0;
+        }
+
+        .jd-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #151117;
+        }
+
+        .jd-sub {
+            font-size: 11px;
+            color: #62748E;
+            margin-top: 3px;
+        }
+
+        .jd-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .jd-primary-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            background: #5B13EC;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(91, 19, 236, .22);
+            transition: opacity .15s;
+        }
+
+        .jd-primary-btn:hover {
+            opacity: .9;
+        }
+
+        .jd-primary-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .jd-icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #62748E;
+            transition: background .15s;
+        }
+
+        .jd-icon-btn:hover {
+            background: #F8FAFC;
+        }
+
+        .jd-icon-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* JD body */
+        .jd-body-wrap {
+            padding: 20px 22px 4px;
+        }
+
+        .jd-role-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 19px;
+            color: #151117;
+            margin-bottom: 8px;
+        }
+
+        .jd-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #62748E;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .jd-meta-sep {
+            color: #CBD5E1;
+        }
+
+        .jd-desc {
+            font-size: 13px;
+            line-height: 1.72;
+            color: #4B5563;
+            margin-bottom: 18px;
+        }
+
+        .jd-section-title {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: #151117;
+            margin-bottom: 10px;
+        }
+
+        .jd-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 22px;
+        }
+
+        .jd-tag {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        /* Extend section */
+        .extend-wrap {
+            padding: 0 22px 22px;
+        }
+
+        .extend-header-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+        .extend-header-row svg {
+            width: 14px;
+            height: 14px;
+            color: #8A2CE2;
+            flex-shrink: 0;
+        }
+
+        .extend-header-row span {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #5F566B;
+        }
+
+        .extend-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .ext-card {
+            background: #fff;
+            border: 1px solid #EEF2F8;
+            border-radius: 14px;
+            padding: 14px 12px;
+            cursor: pointer;
+            transition: box-shadow .15s, border-color .15s;
+        }
+
+        .ext-card:hover {
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .09);
+            border-color: #dde4f0;
+        }
+
+        .ext-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 9px;
+        }
+
+        .ext-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ext-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #151117;
+            margin-bottom: 4px;
+        }
+
+        .ext-desc {
+            font-size: 10px;
+            line-height: 1.5;
+            color: #62748E;
+        }
+
+        /* Bottom input */
+        .output-input-row {
+            flex-shrink: 0;
+            padding: 10px 22px 16px;
+        }
+
+        .output-input-bar {
+            display: flex;
+            align-items: center;
+            background: #F8FAFC;
+            border: 1px solid #E8EDF5;
+            border-radius: 16px;
+            padding: 9px 9px 9px 18px;
+            gap: 10px;
+        }
+
+        .output-input-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13.5px;
+            color: #0F172B;
+        }
+
+        .output-input-bar input::placeholder {
+            color: #B0BBCB;
+        }
+
+        .send-sm {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            border: none;
+            background: #5B13EC;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: opacity .15s;
+        }
+
+        .send-sm:hover {
+            opacity: .88;
+        }
+
+        .send-sm svg {
+            width: 16px;
+            height: 16px;
+            color: #fff;
+        }
+
+        /* ════════════════════════════════════
+       ACTIVATE ROLE SUB-MODAL
+    ════════════════════════════════════ */
+        .sub-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .28);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .sub-overlay.hidden {
+            display: none;
+        }
+
+        .act-modal {
+            width: 500px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .26);
+            overflow: hidden;
+        }
+
+        .act-header {
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .act-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .act-sub {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .close-x {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+            border-radius: 7px;
+            transition: background .15s;
+        }
+
+        .close-x:hover {
+            background: #F3F4F6;
+        }
+
+        .close-x svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .act-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Role summary card */
+        .summary-card {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .summary-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 9px;
+        }
+
+        .summary-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .ai-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            background: rgba(139, 92, 246, .1);
+            border: 1px solid rgba(139, 92, 246, .2);
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #8B5CF6;
+        }
+
+        .ai-pill svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .summary-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .s-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .s-meta-item svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* Radio options */
+        .radio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-opt {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 16px;
+            border: 1px solid #E5E7EB;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: border-color .15s, background .15s;
+        }
+
+        .radio-opt.active {
+            border-color: #8B5CF6;
+            background: rgba(139, 92, 246, .04);
+        }
+
+        .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #D1D5DB;
+            flex-shrink: 0;
+            margin-top: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color .15s;
+        }
+
+        .radio-opt.active .radio-circle {
+            border-color: #8B5CF6;
+        }
+
+        .radio-fill {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8B5CF6;
+            display: none;
+        }
+
+        .radio-opt.active .radio-fill {
+            display: block;
+        }
+
+        .radio-t {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .radio-s {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+
+        /* Footer */
+        .act-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px 18px;
+            background: #F9FAFB;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .cancel-btn {
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background .15s;
+        }
+
+        .cancel-btn:hover {
+            background: #E5E7EB;
+        }
+
+        .add-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 22px;
+            background: #8B5CF6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, .3);
+            transition: opacity .15s;
+        }
+
+        .add-btn:hover {
+            opacity: .9;
+        }
+
+        .add-btn svg {
+            width: 17px;
+            height: 17px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background screenshot -->
+    <img src="workflow-screen.png" alt="Add New Role — Workflow" class="workflow-screen" />
+
+    <!-- Small avatar bottom-right -->
+    <div class="agent-bubble" onclick="openModal()" role="button" tabindex="0" aria-label="Open TalentAtlas">
+        <img src="talent-hi.png" alt="TalentAtlas" />
+    </div>
+
+    <!-- ════════════ MAIN OVERLAY ════════════ -->
+    <div class="overlay" id="main-overlay">
+        <div class="modal">
+
+            <!-- Shared header -->
+            <div class="modal-header">
+                <div class="mh-left">
+                    <img src="talent-hi.png" class="header-avatar" alt="" />
+                    <div class="header-info">
+                        <div class="header-title-row">
+                            <span class="header-name">TalentAtlas</span>
+                            <span class="header-badge">Role Intelligence</span>
+                        </div>
+                        <div class="header-sub">TalentAtlas is here to help you define, refine, and elevate your
+                            professional identity.</div>
+                    </div>
+                </div>
+                <div class="mh-right">
+                    <span class="workwise-label">Workwise AI Assistant</span>
+                    <button class="icon-btn" title="Expand">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round">
+                            <path d="M3 8V3h5M17 8V3h-5M3 12v5h5M17 12v5h-5" />
+                        </svg>
+                    </button>
+                    <button class="icon-btn" title="Close" onclick="closeModal()">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round">
+                            <path d="M5 5l10 10M15 5L5 15" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══ STATE 1: LANDING ═══ -->
+            <div id="state-landing">
+                <div class="landing-hero">
+                    <img src="talent-hi.png" class="landing-avatar" alt="TalentAtlas" />
+                    <div class="landing-name">TalentAtlas</div>
+                    <span class="landing-badge">Role Intelligence</span>
+                </div>
+
+                <div class="input-wrap">
+                    <div class="input-bar">
+                        <input type="text" id="landing-input" placeholder="Ask TalentAtlas..." />
+                        <button class="send-btn" onclick="handleSend()" title="Send">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="prompt-chips">
+                    <div class="chip" onclick="useChip('Draft role overview')"><span class="chip-dot"
+                            style="background:#FFB900;"></span>Draft role overview</div>
+                    <div class="chip" onclick="useChip('Add core responsibilities')"><span class="chip-dot"
+                            style="background:#FF637E;"></span>Add core responsibilities</div>
+                    <div class="chip" onclick="useChip('Map required skills')"><span class="chip-dot"
+                            style="background:#00D492;"></span>Map required skills</div>
+                    <div class="chip" onclick="useChip('Estimate pay range')"><span class="chip-dot"
+                            style="background:#5B13EC;"></span>Estimate pay range</div>
+                </div>
+
+                <div class="capabilities-section">
+                    <div class="cap-divider">
+                        <div class="cap-line"></div>
+                        <span class="cap-label">Capabilities</span>
+                        <div class="cap-line"></div>
+                    </div>
+                    <div class="cap-cards">
+                        <div class="cap-card">
+                            <div class="cap-bar" style="background:linear-gradient(90deg,#2B7FFF,#615FFF);"></div>
+                            <div class="cap-icon" style="background:#EFF6FF;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#2B7FFF" stroke-width="1.8"
+                                    stroke-linecap="round">
+                                    <line x1="18" y1="20" x2="18" y2="10" />
+                                    <line x1="12" y1="20" x2="12" y2="4" />
+                                    <line x1="6" y1="20" x2="6" y2="14" />
+                                    <path d="M2 20h20" />
+                                </svg>
+                            </div>
+                            <div class="cap-title">Predictive Analytics</div>
+                            <div class="cap-desc">Forecast hiring needs based on historical team growth.</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-bar" style="background:linear-gradient(90deg,#FF2056,#F6339A);"></div>
+                            <div class="cap-icon" style="background:#FFF1F2;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#FF2056" stroke-width="1.8"
+                                    stroke-linecap="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                </svg>
+                            </div>
+                            <div class="cap-title">Sentiment Scan</div>
+                            <div class="cap-desc">Real-time pulse on team morale and engagement levels.</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-bar" style="background:linear-gradient(90deg,#00BC7D,#00BBA7);"></div>
+                            <div class="cap-icon" style="background:#ECFDF5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#00BC7D" stroke-width="1.8"
+                                    stroke-linecap="round">
+                                    <line x1="12" y1="1" x2="12" y2="23" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                                </svg>
+                            </div>
+                            <div class="cap-title">Market Comparison</div>
+                            <div class="cap-desc">Salary benchmarking across 40+ global tech markets.</div>
+                        </div>
+                        <div class="cap-card">
+                            <div class="cap-bar" style="background:linear-gradient(90deg,#FE9A00,#FF6900);"></div>
+                            <div class="cap-icon" style="background:#FFFBEB;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#FF6900" stroke-width="1.8"
+                                    stroke-linecap="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                            </div>
+                            <div class="cap-title">Bias Detection</div>
+                            <div class="cap-desc">Scan JDs and comms for unconscious bias patterns.</div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /state-landing -->
+
+            <!-- ═══ STATE 2: OUTPUT ═══ -->
+            <div id="state-output">
+
+                <!-- User message -->
+                <div class="msg-row">
+                    <div class="user-bubble" id="user-msg">
+                        Create a comprehensive role definition for a Senior Backend Engineer in the Payments team,
+                        focusing on high concurrency systems and Python/Go experience.
+                    </div>
+                    <div class="user-avatar">PA</div>
+                </div>
+
+                <!-- Scrollable content -->
+                <div class="output-scroll">
+                    <div class="jd-card">
+                        <!-- JD header -->
+                        <div class="jd-header">
+                            <div class="jd-header-left">
+                                <div class="jd-title">Job Description</div>
+                                <div class="jd-sub">Composed using role design, skills mapping, market intelligence, and
+                                    internal standards.</div>
+                            </div>
+                            <div class="jd-actions">
+                                <button class="jd-primary-btn" onclick="openActivate()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="22 2 15 22 11 13 2 9 22 2" />
+                                    </svg>
+                                    Send to Workflow
+                                </button>
+                                <button class="jd-icon-btn" title="Download">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                                        <polyline points="7 10 12 15 17 10" />
+                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                </button>
+                                <button class="jd-icon-btn" title="Share">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round">
+                                        <circle cx="18" cy="5" r="3" />
+                                        <circle cx="6" cy="12" r="3" />
+                                        <circle cx="18" cy="19" r="3" />
+                                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                    </svg>
+                                </button>
+                                <button class="jd-icon-btn" title="Copy">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- JD body -->
+                        <div class="jd-body-wrap">
+                            <div class="jd-role-title">Senior Back-end Engineer — Payments</div>
+                            <div class="jd-meta">
+                                <span>📍 Remote / HYBRID</span>
+                                <span class="jd-meta-sep">•</span>
+                                <span>$160k – $220k</span>
+                                <span class="jd-meta-sep">•</span>
+                                <span>⏱ Full-Time</span>
+                            </div>
+                            <div class="jd-desc">
+                                A senior-level back-end engineering role focused on designing and building
+                                high-throughput payment systems. This position requires deep expertise in distributed
+                                systems, concurrency, and system design to ensure reliability, scalability, and
+                                low-latency transaction processing. You will work closely with product and
+                                infrastructure teams to shape core platform architecture, drive technical standards, and
+                                mentor engineers through complex system challenges. The role plays a key part in
+                                evolving the payments platform to support global scale and long-term growth.
+                            </div>
+                            <div class="jd-section-title">Key Competencies Required</div>
+                            <div class="jd-tags">
+                                <span class="jd-tag" style="background:#F3E8FF;color:#8200DB;">• Go/Python</span>
+                                <span class="jd-tag" style="background:#F3E8FF;color:#8200DB;">• High Concurrency</span>
+                                <span class="jd-tag" style="background:#DBEAFE;color:#1447E6;">• Distributed
+                                    Systems</span>
+                                <span class="jd-tag" style="background:#DBEAFE;color:#1447E6;">• System Design</span>
+                                <span class="jd-tag" style="background:#DCFCE7;color:#008236;">• Mentorship</span>
+                            </div>
+                        </div>
+
+                        <!-- Extend section -->
+                        <div class="extend-wrap">
+                            <div class="extend-header-row">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                                <span>You can extend this with:</span>
+                            </div>
+                            <div class="extend-cards">
+                                <div class="ext-card">
+                                    <div class="ext-icon" style="background:#FFF7ED;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6900" stroke-width="1.8"
+                                            stroke-linecap="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M12 8v4l3 3" />
+                                        </svg>
+                                    </div>
+                                    <div class="ext-title">Interview Questions</div>
+                                    <div class="ext-desc">Generate tailored screening questions for this role.</div>
+                                </div>
+                                <div class="ext-card">
+                                    <div class="ext-icon" style="background:#F0FDF4;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#00C950" stroke-width="1.8"
+                                            stroke-linecap="round">
+                                            <line x1="12" y1="1" x2="12" y2="23" />
+                                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                                        </svg>
+                                    </div>
+                                    <div class="ext-title">Compensation Benchmark</div>
+                                    <div class="ext-desc">See salary ranges for this market and seniority.</div>
+                                </div>
+                                <div class="ext-card">
+                                    <div class="ext-icon" style="background:#EFF6FF;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#2B7FFF" stroke-width="1.8"
+                                            stroke-linecap="round">
+                                            <path
+                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                    </div>
+                                    <div class="ext-title">Outreach Emails</div>
+                                    <div class="ext-desc">Draft personalized email for Passive Candidates.</div>
+                                </div>
+                                <div class="ext-card">
+                                    <div class="ext-icon" style="background:#FAF5FF;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#AD46FF" stroke-width="1.8"
+                                            stroke-linecap="round">
+                                            <path d="M12 20h9" />
+                                            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ext-title">Role Refinement</div>
+                                    <div class="ext-desc">Iterate on wording and alignment of the role definition.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /jd-card -->
+                </div><!-- /output-scroll -->
+
+                <!-- Bottom input -->
+                <div class="output-input-row">
+                    <div class="output-input-bar">
+                        <input type="text" placeholder="Ask TalentAtlas..." />
+                        <button class="send-sm" title="Send">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /state-output -->
+
+        </div><!-- /modal -->
+    </div><!-- /overlay -->
+
+    <!-- ════════════ ACTIVATE ROLE SUB-MODAL ════════════ -->
+    <div class="sub-overlay hidden" id="sub-overlay">
+        <div class="act-modal">
+            <div class="act-header">
+                <div>
+                    <div class="act-title">Activate Role</div>
+                    <div class="act-sub">Move this generated role into your organization structure.</div>
+                </div>
+                <button class="close-x" onclick="closeActivate()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="act-body">
+                <!-- Role summary -->
+                <div class="summary-card">
+                    <div class="summary-title-row">
+                        <span class="summary-name">Senior Back-end Engineer — Payments</span>
+                        <span class="ai-pill">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                            AI Generated
+                        </span>
+                    </div>
+                    <div class="summary-meta">
+                        <div class="s-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                            </svg>
+                            Engineering
+                        </div>
+                        <div class="s-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round">
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </svg>
+                            Grade L5
+                        </div>
+                        <div class="s-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            Remote / Hybrid
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radio options -->
+                <div class="radio-list">
+                    <div class="radio-opt active" onclick="selectOpt(this)">
+                        <div class="radio-circle">
+                            <div class="radio-fill"></div>
+                        </div>
+                        <div>
+                            <div class="radio-t">Open in Role Editor</div>
+                            <div class="radio-s">Review and modify details before saving.</div>
+                        </div>
+                    </div>
+                    <div class="radio-opt" onclick="selectOpt(this)">
+                        <div class="radio-circle">
+                            <div class="radio-fill"></div>
+                        </div>
+                        <div>
+                            <div class="radio-t">Add as Draft Role</div>
+                            <div class="radio-s">Add directly to role management as a draft.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="act-footer">
+                <button class="cancel-btn" onclick="closeActivate()">Cancel</button>
+                <button class="add-btn" onclick="closeActivate()">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_PROMPT = "Create a comprehensive role definition for a Senior Backend Engineer in the Payments team, focusing on high concurrency systems and Python/Go experience.";
+
+        function openModal() {
+            document.getElementById('main-overlay').classList.remove('hidden');
+            showState('landing');
+        }
+        function closeModal() {
+            document.getElementById('main-overlay').classList.add('hidden');
+        }
+
+        function showState(state) {
+            const landing = document.getElementById('state-landing');
+            const output = document.getElementById('state-output');
+            if (state === 'landing') {
+                landing.style.display = 'flex';
+                output.style.display = 'none';
+            } else {
+                landing.style.display = 'none';
+                output.style.display = 'flex';
+            }
+        }
+
+        function handleSend() {
+            const input = document.getElementById('landing-input');
+            const text = input.value.trim() || DEFAULT_PROMPT;
+            document.getElementById('user-msg').textContent = text;
+            showState('output');
+        }
+
+        function useChip(label) {
+            document.getElementById('landing-input').value = label;
+            setTimeout(handleSend, 100);
+        }
+
+        function openActivate() {
+            document.getElementById('sub-overlay').classList.remove('hidden');
+        }
+        function closeActivate() {
+            document.getElementById('sub-overlay').classList.add('hidden');
+        }
+
+        function selectOpt(el) {
+            document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Open modal on page load
+        openModal();
+    </script>
+</body>
+
+</html>

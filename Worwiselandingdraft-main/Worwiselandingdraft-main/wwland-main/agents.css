@@ -1,0 +1,684 @@
+/* ======================================
+   AGENTS PAGE — agents.css
+   Supplements shared style.css
+   Premium, buttery hover effects.
+   ====================================== */
+
+/* ── Page wrapper ── */
+.agents-page {
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ======================================
+   PAGE HERO
+   ====================================== */
+.agents-page-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 40px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.aph-glow {
+  position: absolute;
+  width: 600px;
+  height: 280px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(91, 19, 236, .06);
+  filter: blur(70px);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.aph-title {
+  margin-bottom: 16px;
+  margin-top: 20px;
+}
+
+.aph-title-dark {
+  font-family: var(--sf);
+  font-weight: 700;
+  font-size: 68px;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  color: #0F172B;
+}
+
+.aph-title-gradient {
+  font-family: var(--sf);
+  font-weight: 700;
+  font-size: 68px;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  background: linear-gradient(90deg, #C88CFF 0%, #A45CFF 50%, #8F4DFF 75%, #B26CFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.aph-sub {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 520px;
+}
+
+/* ======================================
+   SECTION HEADING
+   ====================================== */
+.all-agents-heading {
+  padding: 0 64px;
+  margin-bottom: 36px;
+}
+
+/* ======================================
+   AGENT GRID
+   ====================================== */
+.all-agents-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 0 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ======================================
+   AGENT CARD
+   ====================================== */
+.acard {
+  position: relative;
+  background: #fff;
+  border: 0.67px solid #E8EDF4;
+  border-radius: 24px;
+  box-shadow: 0 6px 24px -6px rgba(0, 0, 0, .09);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 24px;
+  overflow: visible;
+  cursor: pointer;
+
+  /* ── Premium transition ──
+     We animate transform, shadow, and border-color only —
+     no layout changes, so it's always GPU-composited. */
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s ease;
+  will-change: transform, box-shadow;
+}
+
+/* ── Card Buttons (Pin/Delete) ── */
+.acard-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.acard:hover .acard-controls {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.acard-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.acard-btn--pin {
+  background: rgba(91, 19, 236, 0.1);
+  color: var(--purple);
+}
+
+.acard-btn--pin.active {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(91, 19, 236, 0.2);
+}
+
+.acard-btn--del {
+  background: rgba(255, 59, 48, 0.1);
+  color: #FF3B30;
+}
+
+.acard-btn:hover {
+  transform: scale(1.1);
+  filter: brightness(1.05);
+}
+
+/* ── Hover: card lifts with purple glow ── */
+.acard:hover {
+  transform: translateY(-8px) scale(1.018);
+  box-shadow:
+    0 20px 48px -10px rgba(91, 19, 236, .18),
+    0 8px 22px -6px rgba(91, 19, 236, .10),
+    0 2px 6px -2px rgba(0, 0, 0, .06);
+  border-color: rgba(91, 19, 236, .22);
+}
+
+/* ── Active press: snaps back slightly ── */
+.acard:active {
+  transform: translateY(-3px) scale(1.008);
+  transition-duration: 0.12s;
+}
+
+/* ── Avatar wrap — transparent, no box ── */
+.acard-avatar-wrap {
+  width: 108px;
+  height: 108px;
+  margin-top: 18px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  /* no box */
+  transition:
+    transform 0.38s cubic-bezier(0.34, 1.12, 0.64, 1);
+}
+
+/* ── Avatar lifts on hover ── */
+.acard:hover .acard-avatar-wrap {
+  transform: translateY(-10px) scale(1.08);
+}
+
+.acard-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .12));
+  transition: transform 0.38s cubic-bezier(0.34, 1.12, 0.64, 1);
+}
+
+/* Slight zoom inside on hover for extra depth */
+.acard:hover .acard-avatar {
+  transform: scale(1.04);
+}
+
+/* ── Card body ── */
+.acard-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 20px 0;
+}
+
+.acard-name {
+  font-family: var(--sf);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.3;
+  text-align: center;
+  color: #0F172B;
+  transition: color 0.2s ease;
+}
+
+.acard:hover .acard-name {
+  color: var(--purple);
+}
+
+.acard-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-family: var(--sf);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+
+.acard-tag.blue {
+  background: #EFF6FF;
+  color: #155DFC;
+}
+
+.acard-tag.purple {
+  background: rgba(91, 19, 236, .10);
+  color: var(--purple);
+}
+
+.acard-desc {
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: center;
+  color: var(--muted);
+  max-width: 230px;
+  margin-top: 2px;
+}
+
+/* ── Feature list ── */
+.acard-list {
+  list-style: none;
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background 0.25s ease;
+}
+
+.acard:hover .acard-list {
+  background: #F3F0FF;
+  border: 0.67px solid rgba(91, 19, 236, .09);
+}
+
+.acard-list--purple {
+  background: rgba(91, 19, 236, .04);
+}
+
+.acard:hover .acard-list--purple {
+  background: rgba(91, 19, 236, .09);
+}
+
+.acard-list li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+  font-size: 10.5px;
+  color: #314158;
+}
+
+.adot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.adot.blue {
+  background: #2B7FFF;
+}
+
+.adot.purple {
+  background: var(--purple);
+}
+
+/* CTA button removed — no button on cards */
+
+
+/* ======================================
+   AGENT GROUP SECTIONS
+   ====================================== */
+.agent-group {
+  padding: 0 64px;
+  margin-bottom: 56px;
+  overflow: visible;
+}
+
+/* Section heading — matches the existing agents-title style */
+.ag-header {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 32px;
+}
+
+.ag-title {
+  font-family: var(--sf);
+  font-weight: 700;
+  font-size: 20px;
+  color: #0F172B;
+  letter-spacing: -.3px;
+}
+
+.ag-underline {
+  height: 2.5px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--purple) 0%, rgba(91, 19, 236, 0) 100%);
+  border-radius: 2px;
+}
+
+/* ── Slider wrapper: just a positioning context for the absolute arrows ── */
+.acard-slider-wrap {
+  position: relative;
+}
+
+/* ── Horizontal slider (groups with > 4 cards only) ── */
+.acard-slider {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /*
+   * DEFINITIVE FIX — no horizontal negative margins (they protrude past ancestors
+   * with overflow:hidden and get clipped). Instead the slider group uses reduced
+   * horizontal padding (28px) so 36px of interior padding gives full shadow room.
+   * Vertical: margin-top:-36px absorbs the top padding without a layout gap.
+   */
+  padding: 36px;
+  margin: -36px 0 0;
+}
+
+/* Hide scrollbar */
+.acard-slider::-webkit-scrollbar {
+  height: 0;
+}
+
+.acard-slider {
+  scrollbar-width: none;
+}
+
+/* Fixed-width cards in slider */
+.acard-slider>.acard {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+
+/* ── Arrow buttons: absolute, vertically centered in the wrap ── */
+.aslider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .10);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: box-shadow .18s, background .18s, transform .15s;
+  z-index: 10;
+}
+
+.aslider-prev {
+  left: -4px;
+}
+
+.aslider-next {
+  right: -4px;
+}
+
+.aslider-btn:hover {
+  background: #F8FAFC;
+  box-shadow: 0 4px 18px rgba(91, 19, 236, .16);
+  color: var(--purple);
+}
+
+.aslider-btn:active {
+  transform: translateY(-50%) scale(.9);
+}
+
+
+/* ── Flex row (groups with ≤ 4 cards) ── */
+.acard-row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 36px;
+  margin-top: -36px;
+}
+
+/* Cards in a row take natural width */
+.acard-row>.acard {
+  flex: 0 0 240px;
+}
+
+/* ── Slider group scoped padding fix ──
+   Reduces group horizontal padding from 64px to 28px so the slider's
+   internal 36px padding (28 + 36 = 64) visually aligns cards with other
+   sections — without needing horizontal negative margins that cause clipping. */
+.agent-group--slider {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+/* Restore heading indent to match other groups (28 + 36 = 64px from edge) */
+.agent-group--slider .ag-header {
+  margin-left: 36px;
+}
+
+
+/* ======================================
+   RESPONSIVE
+   ====================================== */
+@media (max-width: 1200px) {
+  .all-agents-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 40px;
+  }
+
+  .all-agents-heading {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 860px) {
+  .all-agents-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 24px;
+  }
+
+  .all-agents-heading {
+    padding: 0 24px;
+  }
+
+  .aph-title-dark,
+  .aph-title-gradient {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 560px) {
+  .all-agents-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+}
+
+/* ── Custom Agent Fusion Promo ── */
+.acard--promo {
+  border: 0.67px solid #E8EDF4;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAFBFF 100%);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.acard--promo:hover {
+  border-color: rgba(91, 19, 236, 0.4);
+  box-shadow: 0 12px 30px rgba(91, 19, 236, 0.15) !important;
+}
+
+.avatar-stack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 20px;
+  height: 90px;
+  position: relative;
+}
+
+.stack-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: transparent;
+  /* Double shadow: first mask the background ring with white, then apply violet ring */
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 1px rgba(91, 19, 236, 0.25));
+  margin-left: -20px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  object-fit: contain;
+  position: relative;
+}
+
+.stack-img:first-child { margin-left: 0; z-index: 1; }
+.stack-img:nth-child(2) { z-index: 2; }
+.stack-img:nth-child(3) { z-index: 3; }
+
+.stack-img:hover {
+  transform: translateY(-8px) scale(1.1);
+  z-index: 10 !important;
+}
+
+.promo-tag {
+  background: linear-gradient(90deg, #5B13EC, #155DFC);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.promo-btn {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(91, 19, 236, 0.2);
+}
+
+.promo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(91, 19, 236, 0.3);
+  filter: brightness(1.1);
+}
+
+/* ======================================
+   HR TOGGLE (3D FLIP)
+   ====================================== */
+.sticky-toggle-wrap {
+  position: fixed;
+  top: 92px;
+  right: 24px;
+  z-index: 1000;
+  perspective: 1000px;
+}
+
+.hr-flip-card {
+  width: 84px;
+  height: 38px;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+/* Duplicate stack effect on hover */
+.hr-flip-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  z-index: -1;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.hr-flip-card:hover::before {
+  opacity: 1;
+  transform: translate(5px, 5px);
+}
+
+.hr-flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transform-style: preserve-3d;
+}
+
+.flip-front, 
+.flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #E2E8F0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.flip-front {
+  color: #0F172B;
+}
+
+.flip-back {
+  color: var(--purple);
+  transform: rotateY(180deg);
+  box-shadow: 0 4px 14px rgba(91, 19, 236, 0.1);
+}
+
+.hr-flip-card:hover {
+  transform: translateY(-2px);
+}
+
+.hr-flip-card.flipped:hover {
+  transform: rotateY(180deg) translateY(-2px);
+}
+
+/* ── Filtering Logic ── */
+.filtering-hr .acard:not([data-category="hr"]) {
+  display: none !important;
+}
+
+/* Smooth fade for HR mode */
+.filtering-hr .acard[data-category="hr"] {
+  animation: cardFadeIn 0.5s ease forwards;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

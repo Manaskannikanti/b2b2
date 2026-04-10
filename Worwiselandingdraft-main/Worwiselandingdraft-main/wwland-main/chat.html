@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat — Workwise.AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ════════════════════════════
+       CHAT PAGE SPECIFIC STYLES
+    ════════════════════════════ */
+        body {
+            background: #FFFFFF;
+            overflow: hidden;
+            /* standard app feel */
+        }
+
+        /* ── Layout Grid ── */
+        .chat-layout {
+            display: flex;
+            height: calc(100vh - 70px);
+            /* minus header */
+            margin-top: 70px;
+        }
+
+        /* ── Icon Sidebar (Left, 85px) ── */
+        /* Reuse from style.css / other pages, assuming basic sidebar class exists or is consistent */
+        .icon-sidebar {
+            width: 60px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0 14px;
+            z-index: 20;
+        }
+
+        /* ── Recent Sidebar (Secondary, 320px) ── */
+        .recent-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: #F8FAFC;
+            border-right: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .recent-header {
+            padding: 24px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .recent-title {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #64748B;
+        }
+
+        .recent-filter-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748B;
+        }
+
+        .recent-filter-btn:hover {
+            background: #E2E8F0;
+        }
+
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 0 16px 24px;
+        }
+
+        /* Recent Card */
+        .r-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            /* Default border */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all .2s;
+        }
+
+        .r-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .05);
+        }
+
+        /* Live card styling override */
+        .r-card.live-active {
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .r-card.live-active::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: #6366F1;
+        }
+
+        /* Top Row: Badge + Time */
+        .r-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .r-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Arimo', sans-serif;
+            font-size: 10px;
+            font-weight: 400;
+            line-height: 15px;
+        }
+
+        .r-badge.live {
+            background: #DCFCE7;
+            color: #008236;
+        }
+
+        .r-badge.review {
+            background: #FEF3C6;
+            color: #BB4D00;
+        }
+
+        .r-badge.draft {
+            background: #F1F5F9;
+            color: #45556C;
+        }
+
+        .r-badge.completed {
+            background: #DBEAFE;
+            color: #1447E6;
+        }
+
+        .r-time {
+            font-family: 'Arimo';
+            font-size: 10px;
+            color: #64748B;
+        }
+
+        .r-title {
+            font-family: 'Arimo';
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 20px;
+            color: #0F172A;
+            margin-bottom: 4px;
+        }
+
+        .r-desc {
+            font-family: 'Arimo';
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+            color: #64748B;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ── Main Content Area ── */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            /* Fix top clipping */
+            padding-top: 80px;
+            padding-bottom: 40px;
+            position: relative;
+            background: #FFFFFF;
+            overflow-y: auto;
+            /* Enable scrolling */
+            min-height: 0;
+            /* Flexbox scroll fix */
+            /* Add slight fade in animation */
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .empty-state {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ── Master Agent Avatar ── */
+        .master-agent-wrap {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .master-agent-glow {
+            position: absolute;
+            inset: -18px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(91, 19, 236, 0.15) 0%, rgba(91, 19, 236, 0.04) 50%, transparent 70%);
+            filter: blur(8px);
+            z-index: 0;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.08);
+            }
+        }
+
+        .master-agent-avatar {
+            position: relative;
+            z-index: 1;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            border: 3px solid #fff;
+            box-shadow: 0 8px 30px rgba(91, 19, 236, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .master-status-dot {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            width: 16px;
+            height: 16px;
+            background: #22C55E;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* ── Greeting ── */
+        .es-greeting {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 40px;
+            letter-spacing: -0.5px;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .es-greeting span {
+            background: linear-gradient(135deg, #5B13EC, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .es-sub {
+            font-family: 'Arimo', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+            color: #64748B;
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+
+        /* Chat Input Field (inherits `.chat-ph` typography from style.css but as an input) */
+        .chat-ph-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 500;
+            color: #0F172B;
+            font-family: 'Arimo', sans-serif;
+            line-height: 1.6;
+        }
+
+        .chat-ph-input::placeholder {
+            color: #90A1B9;
+        }
+
+        /* Snowflake Banner */
+        .snowflake-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 768px;
+            max-width: 90%;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 28px;
+        }
+
+        .sb-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .sb-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0EA5E9;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .sb-btn:hover {
+            background: #F1F5F9;
+        }
+
+        /* ── Prompt Pills ── */
+        .prompt-pills-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .prompt-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 99px;
+            padding: 8px 16px;
+            font-family: 'Arimo', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .prompt-pill:hover {
+            border-color: #8B5CF6;
+            color: #5B13EC;
+            background: #F8FAFC;
+        }
+
+        .prompt-pill svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.5;
+            flex-shrink: 0;
+        }
+
+        /* Footer Text */
+        .chat-footer {
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px;
+            color: #99A1AF;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: auto;
+            padding-bottom: 20px;
+        }
+
+        .cf-icon {
+            color: #8A2CE2;
+        }
+
+        /* ── Chat Feed ── */
+        .chat-feed-view {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Orchestrator */
+        .orch-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .orch-active-pill {
+            background: #F3E8FF;
+            color: #8200DB;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        .orch-title {
+            font-size: 32px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #101828;
+            margin-bottom: 12px;
+        }
+
+        .orch-sub {
+            color: #64748B;
+            font-size: 16px;
+            max-width: 500px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+
+        .orch-avatars {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .orch-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        /* Response View */
+        .response-view {
+            display: none;
+            /* Flex when active */
+            flex-direction: column;
+            gap: 24px;
+            width: 100%;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* User Message */
+        .user-msg-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .user-msg-bubble {
+            background: #F3E8FF;
+            color: #374151;
+            padding: 16px 24px;
+            border-radius: 20px 20px 4px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            max-width: 60%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-avatar-small {
+            width: 32px;
+            height: 32px;
+            background: #E2E8F0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        /* Job Card */
+        .job-card {
+            background: #fff;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .jc-header {
+            padding: 24px;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .jc-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .jc-meta {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            color: #64748B;
+            align-items: center;
+        }
+
+        .jc-body {
+            padding: 24px;
+            color: #4B5563;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Competencies */
+        .jc-competencies {
+            padding: 0 24px 24px;
+        }
+
+        .jc-comp-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .jc-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag.purple {
+            background: #F3E8FF;
+            color: #8200DB;
+        }
+
+        .tag.blue {
+            background: #DBEAFE;
+            color: #1447E6;
+        }
+
+        .tag.green {
+            background: #DCFCE7;
+            color: #008236;
+        }
+
+        .tag.orange {
+            background: #FEF3C6;
+            color: #B45309;
+        }
+
+        /* Action Cards */
+        .action-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .ac-card {
+            background: #fff;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+        }
+
+        .ac-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .ac-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ac-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E293B;
+        }
+
+        .ac-desc {
+            font-size: 11px;
+            color: #64748B;
+            line-height: 1.4;
+        }
+
+        /* Sticky Input (Scaled from Large Input) */
+        .sticky-input-container {
+            position: sticky;
+            bottom: 20px;
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        /* Slim Sticky Input */
+        .slim-sticky-input {
+            width: 100%;
+            max-width: 800px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 999px;
+            /* Pill shape */
+            padding: 8px 10px 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: box-shadow .2s, border-color .2s;
+        }
+
+        .slim-sticky-input:focus-within {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border-color: #CBD5E1;
+        }
+
+        .ssi-attach-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #F8FAFC;
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            flex-shrink: 0;
+            transition: background .2s, border-color .2s, transform .15s;
+        }
+
+        .ssi-attach-btn:hover {
+            background: #F1F5F9;
+            border-color: #E2E8F0;
+            transform: scale(1.05);
+        }
+
+        .ssi-attach-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+
+        .ssi-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            color: #1E293B;
+        }
+
+        .ssi-field::placeholder {
+            color: #94A3B8;
+        }
+
+        .ssi-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ssi-voice-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748B;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color .2s, transform .15s;
+        }
+
+        .ssi-voice-btn:hover {
+            color: #155DFC;
+            transform: scale(1.1);
+        }
+
+        .ssi-voice-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+
+        .ssi-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #5B13EC;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0px 4px 10px -2px rgba(91, 19, 236, 0.3);
+            transition: opacity .2s, transform .2s, box-shadow .2s;
+        }
+
+        .ssi-send-btn:hover {
+            background: #4A0EBE;
+            transform: translateY(-1px);
+            box-shadow: 0px 6px 14px -2px rgba(91, 19, 236, 0.4);
+        }
+
+        .ssi-send-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.5;
+            margin-left: -2px;
+            /* optical centering */
+            margin-top: 1px;
+        }
+
+        /* ── Overlapping Agents in Response ── */
+        .response-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            /* Reduced gap as requested */
+            width: 100%;
+            position: relative;
+        }
+
+        .agent-overlap-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 0;
+            /* Perfect top alignment with card */
+            flex-shrink: 0;
+            width: 44px;
+        }
+
+        .agent-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid #E2E8F0;
+            /* Subtle border as requested */
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: -24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            padding: 2px;
+            /* Slightly inset image for premium look */
+        }
+
+        .agent-circle:hover {
+            z-index: 10;
+            transform: scale(1.1);
+        }
+
+        .agent-overlap-group:hover .agent-circle {
+            margin-bottom: 12px;
+        }
+
+        .agent-circle img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Agent Name Tooltip */
+        .agent-circle::after {
+            content: attr(data-name);
+            position: absolute;
+            right: 120%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            background: #111827;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .agent-circle:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Arrow for tooltip */
+        .agent-circle::before {
+            content: '';
+            position: absolute;
+            right: 110%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-left-color: #111827;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .agent-circle:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ── Create Agent Pill Button ── */
+        .create-agent-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: rgba(91, 19, 236, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #5B13EC;
+            border: 1px solid rgba(91, 19, 236, 0.2);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(91, 19, 236, 0.04);
+            white-space: nowrap;
+        }
+
+        .create-agent-pill:hover {
+            transform: translateY(-2px);
+            background: rgba(91, 19, 236, 0.08);
+            border-color: rgba(91, 19, 236, 0.4);
+            box-shadow: 0 8px 16px rgba(91, 19, 236, 0.08);
+        }
+
+        .create-agent-pill svg {
+            transition: transform 0.3s;
+        }
+
+        .create-agent-pill:hover svg {
+            transform: rotate(90deg);
+        }
+
+        /* ── Fusion Modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fusion-modal {
+            width: 480px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .fusion-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 32px 32px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #F8FAFF 0%, #FFFFFF 100%);
+        }
+
+        .fusion-logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            position: relative;
+            background: #fff;
+            padding: 10px;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(91, 19, 236, 0.12);
+            overflow: visible; /* Ensure badge isn't clipped */
+        }
+
+        .avatar-edit-badge {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 26px;
+            height: 26px;
+            background: #5B13EC;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(91, 19, 236, 0.35);
+            z-index: 5;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            font-size: 13px;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .modal-body {
+            padding: 24px 32px 32px;
+        }
+
+        /* Loading State */
+        .fetching-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 16px;
+        }
+
+        .spinner-ring {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #E2E8F0;
+            border-top-color: #5B13EC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Form State */
+        .fusion-form {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1E293B;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #5B13EC;
+            background: #fff;
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .modal-btn-primary {
+            background: #5B13EC;
+            color: #fff;
+        }
+
+        .modal-btn-primary:hover {
+            background: #4A0EBE;
+        }
+
+        .modal-btn-secondary {
+            background: #F1F5F9;
+            color: #475569;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #E2E8F0;
+        }
+
+        /* Success Toast */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #0F172A;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header"
+        style="position:fixed; top:0; left:0; width:100%; border-bottom:1px solid #E5E7EB; z-index:50;">
+        <div class="logo-container"> <!-- Using existing classes from style.css -->
+            <a href="index.html" style="text-decoration:none; display:flex; gap:10px; align-items:center;">
+                <div class="logo-icon" style="position:relative; width:32px; height:32px;">
+                    <div
+                        style="position:absolute; top:0; left:0; width:12px; height:12px; border:4px solid #F0B100; border-right:none; border-bottom:none; border-radius:8px 0 0 0;">
+                    </div>
+                    <div
+                        style="position:absolute; top:0; right:0; width:14px; height:14px; background:#0072CE; border-radius:0 8px 0 6px;">
+                    </div>
+                    <div
+                        style="position:absolute; bottom:0; left:0; width:12px; height:12px; border:4px solid #FB2C36; border-top:none; border-right:none; border-radius:0 0 0 8px;">
+                    </div>
+                    <div
+                        style="position:absolute; bottom:0; right:0; width:12px; height:12px; border:4px solid #00A63E; border-top:none; border-left:none; border-radius:0 0 8px 0;">
+                    </div>
+                </div>
+                <span class="logo-text"
+                    style="color:#1D2939; font-family:'Arimo'; font-weight:700; font-size:24px;">entomo</span>
+            </a>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" aria-label="Notifications">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" aria-label="Settings">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+            </button>
+            <div class="user-profile">
+                <div class="avatar"
+                    style="background:#E2E8F0; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">
+                    PA</div>
+                <div class="user-info">
+                    <span class="user-name">Perform Admin</span>
+                    <span class="user-role">Designation not assign...</span>
+                </div>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-layout">
+
+        <!-- 1. ICON SIDEBAR (60px) -->
+        <nav class="icon-sidebar">
+            <div style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;">
+                <button class="nav-btn" onclick="location.href='index.html'" aria-label="Home"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+                <button class="nav-btn" aria-label="Analytics"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </button>
+                <button class="nav-btn" aria-label="Share"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                </button>
+                <button class="nav-btn" aria-label="Security"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </button>
+                <button class="nav-btn" aria-label="Info"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="#6B7280" stroke-width="1.8" />
+                        <line x1="12" y1="8" x2="12" y2="12" stroke="#6B7280" stroke-width="1.8"
+                            stroke-linecap="round" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" stroke="#6B7280" stroke-width="2.4"
+                            stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div
+                style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center; padding-bottom:8px;">
+                <button class="nav-btn" aria-label="Location"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2C8.69 2 6 4.69 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z" stroke="#6B7280"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="12" cy="8" r="2" stroke="#6B7280" stroke-width="1.8" />
+                    </svg>
+                </button>
+                <button class="nav-btn" aria-label="Transfer"
+                    style="width:40px; height:40px; border-radius:12px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M7 16V4m0 0L3 8m4-4l4 4" stroke="#9CA3AF" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M17 8v12m0 0l4-4m-4 4l-4-4" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="nav-btn nav-btn--workwise active" aria-label="Workwise"
+                    style="width:44px; height:40px; display:flex; align-items:center; justify-content:center; background:rgba(91,19,236,0.18); border:none; border-radius:12px; cursor:pointer;">
+                    <img src="workwise image.png" width="30" height="30" alt="Workwise"
+                        style="display:block; object-fit:contain;" />
+                </button>
+            </div>
+        </nav>
+
+        <!-- 2. RECENT ACTIVITY SIDEBAR (320px) -->
+        <aside class="recent-sidebar">
+            <div class="recent-header">
+                <span class="recent-title">Recent Chats</span>
+                <button class="recent-filter-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="recent-list">
+
+                <!-- #1 Live Updated -->
+                <div class="r-card live-active">
+                    <div class="r-top">
+                        <span class="r-badge live">Live Updated</span>
+                        <span class="r-time">2m ago</span>
+                    </div>
+                    <div class="r-title">Q3 Retention Forecast – Engineering</div>
+                    <div class="r-desc">Analyzing flight risk for senior backend...</div>
+                </div>
+
+                <!-- #2 In Review -->
+                <div class="r-card">
+                    <div class="r-top">
+                        <span class="r-badge review">In Review</span>
+                        <span class="r-time">4h ago</span>
+                    </div>
+                    <div class="r-title">Global Attrition Trend Overview</div>
+                    <div class="r-desc">Cross-referencing APAC vs EMEA exits...</div>
+                </div>
+
+                <!-- #3 Draft -->
+                <div class="r-card">
+                    <div class="r-top">
+                        <span class="r-badge draft">Draft</span>
+                        <span class="r-time">Yesterday</span>
+                    </div>
+                    <div class="r-title">Executive Comp Benchmarking</div>
+                    <div class="r-desc">Preliminary analysis of Series D peers...</div>
+                </div>
+
+                <!-- #4 Completed -->
+                <div class="r-card" style="opacity:0.8;">
+                    <div class="r-top">
+                        <span class="r-badge completed">Completed</span>
+                        <span class="r-time">Oct 24</span>
+                    </div>
+                    <div class="r-title">Q4 Hiring Plan Audit</div>
+                    <div class="r-desc">Budget alignment verification...</div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- 3. MAIN CONTENT -->
+        <main class="main-container">
+
+            <div id="empty-state-view" class="empty-state">
+
+                <!-- Master Agent Avatar -->
+                <div class="master-agent-wrap">
+                    <div class="master-agent-glow"></div>
+                    <img src="Master - Agent.png" alt="Workwise Master Agent" class="master-agent-avatar" />
+                    <div class="master-status-dot"></div>
+                </div>
+
+                <!-- Greeting -->
+                <h1 class="es-greeting">Hi, I'm <span>Workwise</span></h1>
+                <p class="es-sub">Your AI workforce strategist. Tell me what you need and I'll assign the right agents
+                    to get it done.</p>
+
+                <!-- Input Box (Reusing Landing Page Component) -->
+                <div class="chat-box" style="margin: 0 auto 28px;">
+                    <div class="chat-inner">
+                        <input type="text" class="chat-ph-input" placeholder="Tell me what you need…" />
+                        <div class="chat-tools">
+                            <button class="chat-tool" aria-label="Attach">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#155DFC"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </button>
+                            <button class="chat-tool" aria-label="Voice">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#155DFC"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                    <line x1="12" y1="19" x2="12" y2="23" />
+                                    <line x1="8" y1="23" x2="16" y2="23" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" aria-label="Send">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Snowflake Context Banner -->
+                <div class="snowflake-banner">
+                    <span class="sb-text">Execute using live enterprise data in Snowflake</span>
+                    <button class="sb-btn">
+                        Continue in Snowflake
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="M12 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Prompts -->
+                <div class="prompt-pills-row">
+                    <div class="prompt-pill"
+                        onclick="document.querySelector('.chat-ph-input').value='Create a Goal Sheet'; document.querySelector('.chat-ph-input').focus();">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                        Create Goal Sheet
+                    </div>
+                    <div class="prompt-pill"
+                        onclick="document.querySelector('.chat-ph-input').value='Analyze Q3 Feedback'; document.querySelector('.chat-ph-input').focus();">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Analyze Q3 Feedback
+                    </div>
+                    <div class="prompt-pill"
+                        onclick="document.querySelector('.chat-ph-input').value='Draft Job Description'; document.querySelector('.chat-ph-input').focus();">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                        Draft Job Description
+                    </div>
+                    <div class="prompt-pill"
+                        onclick="document.querySelector('.chat-ph-input').value='Map Role Architecture'; document.querySelector('.chat-ph-input').focus();">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                        Map Role Architecture
+                    </div>
+                </div>
+
+                <div class="chat-footer">
+                    <svg class="cf-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10z" />
+                        <path d="M12 16v-4" />
+                        <path d="M12 8h.01" />
+                    </svg>
+                    Multi-agent intelligence enabled • Pro workspace
+                </div>
+            </div>
+
+            <div id="chat-feed-view" class="chat-feed-view">
+                <div id="orch-view" class="orch-view">
+                    <div class="orch-active-pill">● Orchestration Active</div>
+                    <h2 class="orch-title">Assembling your AI agent team</h2>
+                    <p class="orch-sub">We are configuring specialized agents based on your project
+                        requirements.<br>Cross-referencing capabilities for optimal collaboration.</p>
+                    <div class="orch-avatars">
+                        <img src="Insight360.png" class="orch-avatar">
+                        <div style="width:40px; height:2px; background:#E2E8F0; position:relative;"></div>
+                        <img src="agent-convocraft.png" class="orch-avatar">
+                        <div style="width:40px; height:2px; background:#E2E8F0; position:relative;"></div>
+                        <img src="pulse 360.png" class="orch-avatar">
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px; color:#64748B; font-size:14px;">
+                        <div class="spinner"
+                            style="width:20px; height:20px; border:2px solid #E2E8F0; border-top-color:#8200DB; border-radius:50%; animation:spin 1s linear infinite;">
+                        </div>
+                        Sharing insights between agents...
+                    </div>
+                </div>
+
+                <div id="response-view" class="response-view">
+                    <!-- User Msg -->
+                    <div class="user-msg-row">
+                        <div class="user-msg-bubble">
+                            Create a comprehensive role definition for a Senior Backend Engineer in the Payments team,
+                            focusing on high concurrency systems and Python/Go experience.
+                        </div>
+                        <div class="user-avatar-small">PA</div>
+                    </div>
+
+                    <!-- Agent Response -->
+                    <div class="response-row">
+                        <div class="agent-overlap-group">
+                            <div class="agent-circle" data-name="Insight360">
+                                <img src="Insight360.png" alt="Insight360">
+                            </div>
+                            <div class="agent-circle" data-name="ConvoCraft">
+                                <img src="agent-convocraft.png" alt="ConvoCraft">
+                            </div>
+                            <div class="agent-circle" data-name="Pulse360">
+                                <img src="pulse 360.png" alt="Pulse360">
+                            </div>
+                        </div>
+                        <div class="job-card">
+                            <div class="jc-header">
+                                <div
+                                    style="margin-bottom:8px; font-size:12px; color:#64748B; display:flex; justify-content:space-between;">
+                                    <span>JOB DESCRIPTION</span>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="create-agent-pill" onclick="openAddAgentModal()">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <line x1="12" y1="5" x2="12" y2="19" />
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                            </svg>
+                                            Create Custom Agent
+                                        </button>
+                                    </div>
+                                </div>
+                                <h3 class="jc-title">Senior Back-end Engineer - Payments</h3>
+                                <div class="jc-meta">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    Remote / HYBRID
+                                    <span style="margin:0 4px">•</span>
+                                    $160k - $220k
+                                    <span style="margin:0 4px">•</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    Full-Time
+                                </div>
+                            </div>
+
+                            <div class="jc-body">
+                                <p style="margin-bottom:16px;">A senior-level back-end engineering role focused on
+                                    designing
+                                    and building high-throughput payment systems. This position requires deep expertise
+                                    in
+                                    distributed systems, concurrency, and financial system architecture.</p>
+                                <p>You will work closely with the platform team to ensure 99.999% availability and
+                                    handle
+                                    peak transaction loads.</p>
+                            </div>
+
+                            <div class="jc-competencies">
+                                <div class="jc-comp-title">Key Competencies Required</div>
+                                <div class="jc-tags">
+                                    <span class="tag purple">• Go/Python</span>
+                                    <span class="tag purple">• High Concurrency</span>
+                                    <span class="tag blue">• Distributed Systems</span>
+                                    <span class="tag blue">• System Design</span>
+                                    <span class="tag green">• Mentorship</span>
+                                </div>
+                            </div>
+
+                            <div style="padding:16px 24px; border-top:1px solid #F3F4F6; background:#fff;">
+                                <div class="jc-comp-title"
+                                    style="display:flex; gap:8px; align-items:center; color:#8A2CE2;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                    </svg>
+                                    Suggested next steps
+                                </div>
+                                <div class="action-cards-grid">
+                                    <div class="ac-card">
+                                        <div class="ac-icon" style="background:#FFF7ED;"><svg width="18" height="18"
+                                                viewBox="0 0 24 24" fill="none" stroke="#FF6900" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                                <line x1="12" y1="17" x2="12" y2="17" />
+                                            </svg></div>
+                                        <div class="ac-title">Interview Questions</div>
+                                        <div class="ac-desc">Generate tailored screening questions...</div>
+                                    </div>
+                                    <div class="ac-card">
+                                        <div class="ac-icon" style="background:#F0FDF4;"><svg width="18" height="18"
+                                                viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2">
+                                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                            </svg></div>
+                                        <div class="ac-title">Compensation</div>
+                                        <div class="ac-desc">See salary ranges for this market...</div>
+                                    </div>
+                                    <div class="ac-card">
+                                        <div class="ac-icon" style="background:#EFF6FF;"><svg width="18" height="18"
+                                                viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                                                <path
+                                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                                <polyline points="22,6 12,13 2,6" />
+                                            </svg></div>
+                                        <div class="ac-title">Outreach Emails</div>
+                                        <div class="ac-desc">Draft personalized emails for candidates...</div>
+                                    </div>
+                                    <div class="ac-card">
+                                        <div class="ac-icon" style="background:#FAF5FF;"><svg width="18" height="18"
+                                                viewBox="0 0 24 24" fill="none" stroke="#9333EA" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg></div>
+                                        <div class="ac-title">Role Refinement</div>
+                                        <div class="ac-desc">Iterate on wording and alignment...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Input Logic: Positioned at bottom of chat feed view -->
+                <div class="sticky-input-container">
+                    <div class="slim-sticky-input">
+                        <button class="ssi-attach-btn" aria-label="Attach">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                            </svg>
+                        </button>
+                        <input type="text" class="ssi-field"
+                            placeholder="Refine this role, activate another agent, or ask a question..." />
+                        <div class="ssi-actions">
+                            <button class="ssi-voice-btn" aria-label="Voice">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                    <line x1="12" y1="19" x2="12" y2="23" />
+                                    <line x1="8" y1="23" x2="16" y2="23" />
+                                </svg>
+                            </button>
+                            <button class="ssi-send-btn" aria-label="Send">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13" />
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const sendBtns = document.querySelectorAll('.send-btn, .ssi-send-btn');
+                const emptyState = document.getElementById('empty-state-view');
+                const chatFeed = document.getElementById('chat-feed-view');
+                const orchView = document.getElementById('orch-view');
+                const responseView = document.getElementById('response-view');
+                const mainContainer = document.querySelector('.main-container');
+
+                sendBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // 1. Hide Empty State
+                        emptyState.style.display = 'none';
+
+                        // 2. Show Chat Feed
+                        chatFeed.style.display = 'flex';
+
+                        // 3. Show Orchestrator
+                        orchView.style.display = 'flex';
+                        mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+
+                        // 4. Wait 3 seconds
+                        setTimeout(() => {
+                            orchView.style.display = 'none';
+                            responseView.style.display = 'flex';
+                        }, 2500);
+                    });
+                });
+
+                // --- CUSTOM AGENT FUSION LOGIC ---
+                let currentAvatarIndex = 0;
+                const availableAvatars = [
+                    'agent-convocraft.png',
+                    'pulse 360.png',
+                    'Insight360.png',
+                    'GrowthPlanner.png',
+                    'assescraft.png'
+                ];
+
+                function cycleFusionAvatar() {
+                    currentAvatarIndex = (currentAvatarIndex + 1) % availableAvatars.length;
+                    document.getElementById('fusion-avatar-preview').src = availableAvatars[currentAvatarIndex];
+                }
+
+                function openAddAgentModal() {
+                    const modal = document.getElementById('add-agent-modal');
+                    const form = document.getElementById('fusion-form');
+                    const fetching = document.getElementById('fetching-ui');
+
+                    // Reset to first non-hi avatar
+                    currentAvatarIndex = 0;
+                    document.getElementById('fusion-avatar-preview').src = availableAvatars[0];
+
+                    modal.classList.add('active');
+                    form.style.display = 'none';
+                    fetching.style.display = 'flex';
+
+                    // Simulation of data fetching
+                    setTimeout(() => {
+                        fetching.style.display = 'none';
+                        form.style.display = 'flex';
+
+                        // Fusion Name based on source agents
+                        document.getElementById('fusion-name').value = 'Sentiment Core';
+                    }, 1800);
+                }
+
+                function closeAddAgentModal(e) {
+                    if (e.target.id === 'add-agent-modal') {
+                        document.getElementById('add-agent-modal').classList.remove('active');
+                    }
+                }
+
+                function saveCustomAgent() {
+                    const name = document.getElementById('fusion-name').value;
+                    const avatarSrc = document.getElementById('fusion-avatar-preview').src;
+                    const avatar = avatarSrc.split('/').pop();
+
+                    // Store in localStorage for agents.html to read
+                    const newAgent = {
+                        name: name,
+                        avatar: avatar
+                    };
+
+                    let myAgents = JSON.parse(localStorage.getItem('myAgents') || '[]');
+                    myAgents.push(newAgent);
+                    localStorage.setItem('myAgents', JSON.stringify(myAgents));
+
+                    // Success Feedback
+                    document.getElementById('add-agent-modal').classList.remove('active');
+                    const toast = document.getElementById('success-toast');
+                    toast.classList.add('active');
+                    setTimeout(() => toast.classList.remove('active'), 3000);
+                }
+            </script>
+        </main>
+
+    </div>
+
+    <div id="add-agent-modal" class="modal-overlay" onclick="closeAddAgentModal(event)">
+        <div class="fusion-modal">
+            <div class="modal-header">
+                <div class="fusion-logo" onclick="cycleFusionAvatar()" style="cursor:pointer;"
+                    title="Click to change avatar">
+                    <img id="fusion-avatar-preview" src="agent-convocraft.png" alt="Custom Agent"
+                        style="width:100%; height:100%; object-fit:contain;">
+                    <div class="avatar-edit-badge" title="Change Avatar">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="modal-title">Create Custom Agent</h2>
+                <p class="modal-sub">Finalize the identity of your new fused intelligence agent.
+                </p>
+            </div>
+            <div class="modal-body">
+                <div id="fetching-ui" class="fetching-state">
+                    <div class="spinner-ring"></div>
+                    <p style="font-size: 14px; color: #64748B;">Fetching AI data points...</p>
+                </div>
+                <div id="fusion-form" class="fusion-form">
+                    <div class="form-group">
+                        <label class="form-label">Agent Name</label>
+                        <input type="text" id="fusion-name" class="form-input" value="Sentiment Core">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn modal-btn-secondary"
+                            onclick="document.getElementById('add-agent-modal').classList.remove('active')">Cancel</button>
+                        <button class="modal-btn modal-btn-primary" onclick="saveCustomAgent()">Save Agent</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-toast" class="toast">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Agent saved to My Agents
+    </div>
+
+</body>
+
+</html>
